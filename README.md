@@ -1,4 +1,4 @@
-Verwendet wird PHP Version 7.1 TS
+Verwendet wird PHP Version 7.1 TS 64 bit
 
 Nach erstem Pull beachten:
 
