@@ -1,3 +1,5 @@
+Verwendet wird PHP Version 7.1 TS
+
 Nach erstem Pull beachten:
 
 1. Projekt in PHPStorm öffnen
