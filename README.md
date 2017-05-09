@@ -1,4 +1,5 @@
 Verwendet wird PHP Version 7.1 TS 64 bit (die für das Projekt angepasst php.ini kann über https://fwuen.de/sprechstundenverwaltung/php.ini bezogen werden)
+Folgendes Plugin herunterladen und in den Ordner {php-directory}\ext\ einfügen: https://xdebug.org/files/php_xdebug-2.5.3-7.1-vc14-x86_64.dll.
 
 Nach erstem Pull beachten:
 
