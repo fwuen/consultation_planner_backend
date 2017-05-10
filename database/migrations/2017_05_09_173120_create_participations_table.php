@@ -14,11 +14,13 @@ class CreateParticipationsTable extends Migration
     public function up()
     {
         Schema::create('participations', function (Blueprint $table) {
+
+            $table->integer('student_id')->unsigned();
+            $table->foreign('student_id')->references('id')->on('students');
             $table->integer('meeting_id')->unsigned();
-            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
-            $table->integer('docent_id')->unsigned();
-            $table->foreign('docent_id')->references('id')->on('docent')->onDelete('cascade');
+            $table->foreign('meeting_id')->references('id')->on('meetings');
             $table->boolean('email_notification_student');
+            $table->timestamps();
 
         });
     }

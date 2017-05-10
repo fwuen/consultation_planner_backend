@@ -14,9 +14,10 @@ class CreateMeetingsTable extends Migration
     public function up()
     {
         Schema::create('meetings', function (Blueprint $table) {
+
             $table->increments('id');
-            $table->integer('docent_id');
-            $table->foreign('docent_id')->references('id')->on('docents')->onDelete('cascade');
+            $table->integer('docent_id')->unsigned();
+            $table->foreign('docent_id')->references('id')->on('docents');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->integer('slots');
@@ -26,7 +27,7 @@ class CreateMeetingsTable extends Migration
             $table->string('description_private', 500);
             $table->string('room', 10);
             $table->dateTime('last_enrollment');
-            $table->timestamp('created');
+            $table->timestamps();
         });
     }
 
