@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Docent extends Model
 {
+    protected $fillable = ['firstname', 'lastname'];
+    protected $guarded = ['id', 'email'];
+
     function getDocentById($id)
     {
         $docent = Docent::find($id);
