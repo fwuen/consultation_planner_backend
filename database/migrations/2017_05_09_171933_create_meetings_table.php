@@ -21,6 +21,7 @@ class CreateMeetingsTable extends Migration
             $table->dateTime('start');
             $table->dateTime('end');
             $table->integer('slots');
+            $table->integer('max_participants');
             $table->boolean('email_notification_docent');
             $table->string('title', 50);
             $table->string('description_public', 500);
