@@ -12,7 +12,7 @@ class Student extends Model
 
     function participation()
     {
-        $this->hasMany('Participation');
+        return $this->hasMany('Participation');
     }
 
     function getStudentById($id)

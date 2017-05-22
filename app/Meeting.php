@@ -11,12 +11,12 @@ class Meeting extends Model
 
     function participation()
     {
-        $this->hasMany('Particupation');
+        return $this->hasMany('Particupation');
     }
 
     function docent()
     {
-        $this->belongsTo('Docent');
+        return $this->belongsTo('Docent');
     }
 
     function getMeetingById($id)

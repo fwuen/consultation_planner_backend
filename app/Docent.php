@@ -23,6 +23,11 @@ class Docent extends Model
 
     function meeting()
     {
-        $this->hasMany('Meeting');
+        return $this->hasMany('Meeting');
+    }
+
+    function meetingSeries()
+    {
+        return $this->hasMany('MeetingSeries');
     }
 }

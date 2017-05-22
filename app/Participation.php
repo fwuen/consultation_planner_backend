@@ -11,12 +11,12 @@ class Participation extends Model
 
     function student()
     {
-        $this->belongsTo('Student');
+        return $this->belongsTo('Student');
     }
 
     function meeting()
     {
-        $this->belongsTo('Meeting');
+        return $this->belongsTo('Meeting');
     }
 
     function getParticipationById($id)
