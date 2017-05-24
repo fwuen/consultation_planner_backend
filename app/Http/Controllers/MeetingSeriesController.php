@@ -35,7 +35,15 @@ class MeetingSeriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'docent_id' => 'required|max:10'
+        ]);
+
+        $meetingseries = new MeetingSeries;
+        $meetingseries->docent_id = $request->get('docent_id');
+
+        $meetingseries.save();
+        return redirect()->route('/');
     }
 
     /**
@@ -48,9 +56,7 @@ class MeetingSeriesController extends Controller
     {
         return response()->json([
             'id' => $meetingSeries->id,
-            'docent_id' => $meetingSeries->docent_id,
-            'first_meeting' => $meetingSeries->first_meeting,
-            'last_meeting' => $meetingSeries->last_meeting
+            'docent_id' => $meetingSeries->docent_id
         ]);
     }
 
@@ -62,7 +68,7 @@ class MeetingSeriesController extends Controller
      */
     public function edit(MeetingSeries $meetingSeries)
     {
-        //
+        //nicht benötigt
     }
 
     /**
@@ -74,7 +80,12 @@ class MeetingSeriesController extends Controller
      */
     public function update(Request $request, MeetingSeries $meetingSeries)
     {
-        //
+        $this->validate($request, [
+            'docent_id' => 'required|max:10'
+        ]);
+        $meetingSeries->docent_id = $request->get('docent_id');
+        $meetingSeries.save();
+        return redirect()->route('/');
     }
 
     /**

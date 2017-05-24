@@ -55,7 +55,7 @@ class DocentController extends Controller
         $docent->email = $request->get('email');
 
         $docent->save();
-        return redirect('/');
+        return redirect()->route('/');
 
     }
 
@@ -108,6 +108,7 @@ class DocentController extends Controller
         $docent->email = $request->get('email');
 
         $docent->save();
+        return redirect()->route('/');
     }
 
     /**
