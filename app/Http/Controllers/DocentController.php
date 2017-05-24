@@ -47,7 +47,12 @@ class DocentController extends Controller
      */
     public function show(Docent $docent)
     {
-        return response()->json(['id' => $docent->id, 'firstname' => $docent->firstname, 'lastname' => $docent->lastname, 'email' => $docent->email,]);
+        return response()->json([
+            'id' => $docent->id,
+            'firstname' => $docent->firstname,
+            'lastname' => $docent->lastname,
+            'email' => $docent->email
+        ]);
     }
 
     /**
