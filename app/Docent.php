@@ -9,6 +9,8 @@ class Docent extends Model
     protected $fillable = ['firstname', 'lastname'];
     protected $guarded = ['id', 'email'];
 
+    //TODO: Getter und Finder auslagern
+
     function getDocentById($id)
     {
         $docent = Docent::find($id);
