@@ -41,12 +41,12 @@ class StudentController extends Controller
             'email' => 'required|email|max:255'
         ]);
 
-        $docent = new Docent;
-        $docent->firstname = $request->get('firstname');
-        $docent->lastname = $request->get('lastname');
-        $docent->email = $request->get('email');
+        $student = new Student;
+        $student->firstname = $request->get('firstname');
+        $student->lastname = $request->get('lastname');
+        $student->email = $request->get('email');
 
-        $docent->save();
+        $student->save();
         return redirect()->route('/');
     }
 
@@ -87,11 +87,11 @@ class StudentController extends Controller
             'email' => 'required|email|max:255'
         ]);
 
-        $docent->firstname = $request->get('firstname');
-        $docent->lastname = $request->get('lastname');
-        $docent->email = $request->get('email');
+        $student->firstname = $request->get('firstname');
+        $student->lastname = $request->get('lastname');
+        $student->email = $request->get('email');
 
-        $docent->save();
+        $student->save();
         return redirect()->route('/');
     }
 

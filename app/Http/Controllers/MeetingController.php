@@ -98,7 +98,7 @@ class MeetingController extends Controller
     public function update(Request $request, Meeting $meeting)
     {
         $this->validate($request,[
-            'docent_id' => 'required|max:10',
+            'meeting_series_id' => 'required|max:10',
             'start' => 'required|date',
             'end' => 'required|date',
             'slots' => 'required|max:11',
@@ -111,7 +111,7 @@ class MeetingController extends Controller
             'last_enrollment' => 'required|date'
         ]);
 
-        $meeting->docent_id = $request->get('docent_id');
+        $meeting->meeting_series_id = $request->get('meeting_series_id');
         $meeting->start = $request->get('start');
         $meeting->end = $request->get('end');
         $meeting->slots = $request->get('slots');

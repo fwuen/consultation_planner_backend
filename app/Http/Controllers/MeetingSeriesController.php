@@ -36,10 +36,12 @@ class MeetingSeriesController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
+            'meeting_count' => 'required|max:10',
             'docent_id' => 'required|max:10'
         ]);
 
         $meetingseries = new MeetingSeries;
+        $meetingseries->meeting_count = $request->get('meeting_count');
         $meetingseries->docent_id = $request->get('docent_id');
 
         $meetingseries.save();

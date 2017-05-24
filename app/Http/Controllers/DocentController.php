@@ -46,13 +46,15 @@ class DocentController extends Controller
         $this->validate($request,[
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255',
+            'academic_title' => 'required|max:50'
         ]);
 
         $docent = new Docent;
         $docent->firstname = $request->get('firstname');
         $docent->lastname = $request->get('lastname');
         $docent->email = $request->get('email');
+        $docent->academic_title = $request->get('academic_title');
 
         $docent->save();
         return redirect()->route('/');
@@ -95,12 +97,14 @@ class DocentController extends Controller
         $this->validate($request,[
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255'
+            'email' => 'required|email|max:255',
+            'academic_title' => 'required|max:50'
         ]);
 
         $docent->firstname = $request->get('firstname');
         $docent->lastname = $request->get('lastname');
         $docent->email = $request->get('email');
+        $docent->academic_title = $request->get('academic_title');
 
         $docent->save();
         return redirect()->route('/');
