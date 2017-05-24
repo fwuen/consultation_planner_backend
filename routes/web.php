@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('docent/search/{term}', 'DocentController@search');
+
 Route::resource('docent', 'DocentController');
 
 Route::resource('meeting', 'MeetingController');

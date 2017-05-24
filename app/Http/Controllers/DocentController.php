@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Docent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DocentController extends Controller
 {
@@ -81,5 +82,26 @@ class DocentController extends Controller
     public function destroy(Docent $docent)
     {
         echo 'destroy';
+    }
+
+    /**
+     * Search for specific resources by term.
+     *
+     * @param  String  $term
+     * @return \Illuminate\Support\Collection $docents
+     */
+    public function search($term)
+    {
+        $termArray = explode(" ", $term);
+
+        $docents = DB::table('docents')
+            ->where(function ($query) use($termArray) {
+                foreach ($termArray as $value) {
+                    $query->orWhere('lastname', 'like', '%'.$value.'%');
+                    $query->orWhere('firstname', 'like', '%'.$value.'%');
+                }
+            })->get();
+
+        return $docents;
     }
 }
