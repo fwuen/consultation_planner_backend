@@ -55,7 +55,7 @@ class DocentController extends Controller
         $docent->email = $request->get('email');
 
         $docent->save();
-        return redirect('/');
+        return redirect()->route('/');
 
     }
 
@@ -67,12 +67,7 @@ class DocentController extends Controller
      */
     public function show(Docent $docent)
     {
-        return response()->json([
-            'id' => $docent->id,
-            'firstname' => $docent->firstname,
-            'lastname' => $docent->lastname,
-            'email' => $docent->email
-        ]);
+        return response()->json($docent);
     }
 
     /**
@@ -108,6 +103,7 @@ class DocentController extends Controller
         $docent->email = $request->get('email');
 
         $docent->save();
+        return redirect()->route('/');
     }
 
     /**
