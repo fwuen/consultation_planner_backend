@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
 {
-    function participation()
+    function participations()
     {
         return $this->hasMany('Participation');
     }
 
-    function docent()
+    function meeting_series()
     {
-        return $this->belongsTo('Docent');
+        return $this->belongsTo('MeetingSeries');
     }
 }

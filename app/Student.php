@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    function participation()
+    function participations()
     {
         return $this->hasMany('Participation');
     }

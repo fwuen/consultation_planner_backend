@@ -10,4 +10,9 @@ class MeetingSeries extends Model
     {
         return $this->belongsTo('Docent');
     }
+
+    function meetings()
+    {
+        return $this->hasMany('Meeting');
+    }
 }

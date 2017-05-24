@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Docent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 //TODO: was passiert, wenn die Validierung ergibt, dass die Daten nicht korrekt sind? --> irgendwie behandeln?
 class DocentController extends Controller
@@ -141,6 +142,6 @@ class DocentController extends Controller
                 }
             })->get();
 
-        return $docents;
+        return response()->json($docents);
     }
 }

@@ -6,12 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Docent extends Model
 {
-    function meeting()
-    {
-        return $this->hasMany('Meeting');
-    }
-
-    function meetingSeries()
+    function meeting_series()
     {
         return $this->hasMany('MeetingSeries');
     }
