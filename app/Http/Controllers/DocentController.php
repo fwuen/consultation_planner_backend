@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Docent;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 //TODO: was passiert, wenn die Validierung ergibt, dass die Daten nicht korrekt sind? --> irgendwie behandeln?
 class DocentController extends Controller
@@ -134,7 +133,7 @@ class DocentController extends Controller
     {
         $termArray = explode(" ", $term);
 
-        $docents = DB::table('docents')
+        $docents = \DB::table('docents')
             ->where(function ($query) use($termArray) {
                 foreach ($termArray as $value) {
                     $query->orWhere('lastname', 'like', '%'.$value.'%');
