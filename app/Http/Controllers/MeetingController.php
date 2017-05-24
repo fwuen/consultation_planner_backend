@@ -46,7 +46,20 @@ class MeetingController extends Controller
      */
     public function show(Meeting $meeting)
     {
-        //
+        return response()->json([
+            'id' => $meeting->id,
+            'docent_id' => $meeting->docent_id,
+            'start' => $meeting->start,
+            'end' => $meeting->end,
+            'slots' => $meeting->slots,
+            'max_participants' => $meeting->max_participants,
+            'email_notification_docent' => $meeting->email_notification_docent,
+            'title' => $meeting->title,
+            'description_public' => $meeting->description_public,
+            'description_private' => $meeting->description_private,
+            'room' => $meeting->room,
+            'last_enrollment' => $meeting->last_enrollment
+        ]);
     }
 
     /**

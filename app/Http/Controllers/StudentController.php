@@ -46,7 +46,12 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        //
+        return response()->json([
+            'id' => $student->id,
+            'firstname' => $student->firstname,
+            'lastname' => $student->lastname,
+            'email' => $student->email
+        ]);
     }
 
     /**

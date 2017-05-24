@@ -19,6 +19,6 @@ Route::resource('docent', 'DocentController');
 
 Route::resource('meeting', 'MeetingController');
 
-Route::resource('meetingSeries', 'MeetingSeriesController');
+Route::resource('meetingseries', 'MeetingSeriesController');
 
 Route::resource('student', 'StudentController');
