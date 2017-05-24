@@ -14,7 +14,7 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -24,7 +24,7 @@ class MeetingController extends Controller
      */
     public function create()
     {
-        //
+        return view('meeting.create');
     }
 
     /**
@@ -93,6 +93,7 @@ class MeetingController extends Controller
      */
     public function destroy(Meeting $meeting)
     {
-        //
+        $meeting->delete();
+        return redirect()->route('/');
     }
 }

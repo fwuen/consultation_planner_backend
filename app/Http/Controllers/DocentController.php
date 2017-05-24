@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Docent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
+//TODO: was passiert, wenn die Validierung ergibt, dass die Daten nicht korrekt sind? --> irgendwie behandeln?
 class DocentController extends Controller
 {
     /**
@@ -14,7 +16,7 @@ class DocentController extends Controller
      */
     public function index()
     {
-        //NUR EIN TEST: return response()->json(['id' => '1', 'firstname' => 'Test', 'lastname' => 'test', 'email' => 'test@test.de']);
+        //Wird nicht benötigt
     }
 
     /**
@@ -24,7 +26,13 @@ class DocentController extends Controller
      */
     public function create()
     {
-        echo 'create';
+        /*
+         * Zeigt im Frontend das entsprechende Formular zum Erzeugen der neuen Ressource
+         * Dozenten müssen allerdings nicht über ein Formular erzeugt werden
+         * Dozenten werden nach dem ersten Login mit dem SSO-Dienst in der Datenbank abgelegt
+         * Daher wird hier keine view zurückgegeben
+         */
+        //Wird nicht benötigt
     }
 
     /**
@@ -35,7 +43,21 @@ class DocentController extends Controller
      */
     public function store(Request $request)
     {
-        echo 'store';
+        //Speichert die mit create() erzeugte Methode persistent
+        $this->validate($request,[
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255'
+        ]);
+
+        $docent = new Docent;
+        $docent->firstname = $request->get('firstname');
+        $docent->lastname = $request->get('lastname');
+        $docent->email = $request->get('email');
+
+        $docent->save();
+        return redirect('/');
+
     }
 
     /**
@@ -62,7 +84,8 @@ class DocentController extends Controller
      */
     public function edit(Docent $docent)
     {
-        echo 'edit';
+        //Analog zu create()
+        //Wird nicht benötigt
     }
 
     /**
@@ -74,7 +97,18 @@ class DocentController extends Controller
      */
     public function update(Request $request, Docent $docent)
     {
-        echo 'update';
+        //Analog zu store()
+        $this->validate($request,[
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255'
+        ]);
+
+        $docent->firstname = $request->get('firstname');
+        $docent->lastname = $request->get('lastname');
+        $docent->email = $request->get('email');
+
+        $docent->save();
     }
 
     /**
@@ -85,6 +119,8 @@ class DocentController extends Controller
      */
     public function destroy(Docent $docent)
     {
-        echo 'destroy';
+        //TODO: Redirect eventuell überarbeiten bzw. ist dieser überhaupt nötig? --> muss in diesem Fall auch in allen anderen Ressource-Controllern geändert werden
+        $docent->delete();
+        return redirect()->route('/');
     }
 }

@@ -14,7 +14,7 @@ class StudentController extends Controller
      */
     public function index()
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -24,7 +24,7 @@ class StudentController extends Controller
      */
     public function create()
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -62,7 +62,7 @@ class StudentController extends Controller
      */
     public function edit(Student $student)
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -85,6 +85,7 @@ class StudentController extends Controller
      */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+        return redirect()->route('/');
     }
 }

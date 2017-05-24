@@ -14,7 +14,7 @@ class MeetingSeriesController extends Controller
      */
     public function index()
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -24,7 +24,7 @@ class MeetingSeriesController extends Controller
      */
     public function create()
     {
-        //
+        //Wird nicht benötigt
     }
 
     /**
@@ -85,6 +85,7 @@ class MeetingSeriesController extends Controller
      */
     public function destroy(MeetingSeries $meetingSeries)
     {
-        //
+        $meetingSeries->delete();
+        return redirect()->route('/');
     }
 }
