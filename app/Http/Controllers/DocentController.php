@@ -14,7 +14,7 @@ class DocentController extends Controller
      */
     public function index()
     {
-        //
+        //NUR EIN TEST: return response()->json(['id' => '1', 'firstname' => 'Test', 'lastname' => 'test', 'email' => 'test@test.de']);
     }
 
     /**
@@ -24,7 +24,7 @@ class DocentController extends Controller
      */
     public function create()
     {
-        //
+        echo 'create';
     }
 
     /**
@@ -35,7 +35,7 @@ class DocentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        echo 'store';
     }
 
     /**
@@ -46,7 +46,7 @@ class DocentController extends Controller
      */
     public function show(Docent $docent)
     {
-        //
+        return response()->json(['id' => $docent->id, 'firstname' => $docent->firstname, 'lastname' => $docent->lastname, 'email' => $docent->email,]);
     }
 
     /**
@@ -57,7 +57,7 @@ class DocentController extends Controller
      */
     public function edit(Docent $docent)
     {
-        //
+        echo 'edit';
     }
 
     /**
@@ -69,7 +69,7 @@ class DocentController extends Controller
      */
     public function update(Request $request, Docent $docent)
     {
-        //
+        echo 'update';
     }
 
     /**
@@ -80,6 +80,6 @@ class DocentController extends Controller
      */
     public function destroy(Docent $docent)
     {
-        //
+        echo 'destroy';
     }
 }
