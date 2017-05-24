@@ -35,7 +35,19 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255'
+        ]);
+
+        $docent = new Docent;
+        $docent->firstname = $request->get('firstname');
+        $docent->lastname = $request->get('lastname');
+        $docent->email = $request->get('email');
+
+        $docent->save();
+        return redirect()->route('/');
     }
 
     /**
@@ -46,12 +58,7 @@ class StudentController extends Controller
      */
     public function show(Student $student)
     {
-        return response()->json([
-            'id' => $student->id,
-            'firstname' => $student->firstname,
-            'lastname' => $student->lastname,
-            'email' => $student->email
-        ]);
+        return response()->json($student);
     }
 
     /**
@@ -74,7 +81,18 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        //
+        $this->validate($request,[
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255'
+        ]);
+
+        $docent->firstname = $request->get('firstname');
+        $docent->lastname = $request->get('lastname');
+        $docent->email = $request->get('email');
+
+        $docent->save();
+        return redirect()->route('/');
     }
 
     /**

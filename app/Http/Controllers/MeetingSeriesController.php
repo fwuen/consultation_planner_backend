@@ -54,10 +54,7 @@ class MeetingSeriesController extends Controller
      */
     public function show(MeetingSeries $meetingSeries)
     {
-        return response()->json([
-            'id' => $meetingSeries->id,
-            'docent_id' => $meetingSeries->docent_id
-        ]);
+        return response()->json($meetingSeries);
     }
 
     /**
