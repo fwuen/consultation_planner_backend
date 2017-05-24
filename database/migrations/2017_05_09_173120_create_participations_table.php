@@ -16,9 +16,9 @@ class CreateParticipationsTable extends Migration
         Schema::create('participations', function (Blueprint $table) {
 
             $table->integer('student_id')->unsigned();
-            $table->foreign('student_id')->references('id')->on('students');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->integer('meeting_id')->unsigned();
-            $table->foreign('meeting_id')->references('id')->on('meetings');
+            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
             $table->boolean('email_notification_student');
             $table->timestamps();
 

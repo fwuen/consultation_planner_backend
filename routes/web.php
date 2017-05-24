@@ -11,6 +11,20 @@
 |
 */
 
+/*
+|--------------------------------------------------------------------------
+| Default Routes
+|--------------------------------------------------------------------------
+| GET         /models                index     models.index
+| GET         /models/create         create    models.create
+| POST        /models                store     models.store
+| GET         /models/{model}        show      models.show
+| GET         /models/{model}/edit   edit      models.edit
+| PUT/PATCH   /models/{model}        update    models.update
+| DELETE      /models/{model}        destroy   models.destroy
+|
+*/
+
 Route::get('/', function () {
     return view('welcome');
 });

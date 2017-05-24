@@ -16,6 +16,7 @@ class CreateDocentsTable extends Migration
         Schema::create('docents', function (Blueprint $table) {
 
             $table->increments('id');
+            $table->string('academic_title', 50);
             $table->string('firstname',50);
             $table->string('lastname', 50);
             $table->string('email', 256);

@@ -16,7 +16,7 @@ class AddSeriesFkToMeetingsTable extends Migration
         Schema::table('meetings', function (Blueprint $table)
         {
            $table->integer('meeting_series_id')->unsigned();
-           $table->foreign('meeting_series_id')->references('id')->on('meeting_series');
+           $table->foreign('meeting_series_id')->references('id')->on('meeting_series')->onDelete('cascade');
         });
     }
 

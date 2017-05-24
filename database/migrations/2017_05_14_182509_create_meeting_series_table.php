@@ -16,10 +16,9 @@ class CreateMeetingSeriesTable extends Migration
         Schema::create('meeting_series', function (Blueprint $table) {
 
             $table->increments('id');
+            $table->integer('meeting_count')->unsigned();
             $table->integer('docent_id')->unsigned();
-            $table->foreign('docent_id')->references('id')->on('docents');
-            $table->dateTime('first_meeting');
-            $table->dateTime('last_meeting');
+            $table->foreign('docent_id')->references('id')->on('docents')->onDelete('cascade');
             $table->timestamps();
         });
     }
