@@ -13,7 +13,7 @@ class CreateParticipationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('participations', function (Blueprint $table) {
+        \Schema::create('participations', function (Blueprint $table) {
 
             $table->integer('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
@@ -32,6 +32,6 @@ class CreateParticipationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('participations');
+        \Schema::dropIfExists('participations');
     }
 }

@@ -13,7 +13,7 @@ class CreateDocentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('docents', function (Blueprint $table) {
+        \Schema::create('docents', function (Blueprint $table) {
 
             $table->increments('id');
             $table->string('academic_title', 50);
@@ -31,6 +31,6 @@ class CreateDocentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('docents');
+        \Schema::dropIfExists('docents');
     }
 }

@@ -13,7 +13,7 @@ class CreateMeetingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('meetings', function (Blueprint $table) {
+        \Schema::create('meetings', function (Blueprint $table) {
 
             $table->increments('id');
             $table->dateTime('start');
@@ -37,6 +37,6 @@ class CreateMeetingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meetings');
+        \Schema::dropIfExists('meetings');
     }
 }

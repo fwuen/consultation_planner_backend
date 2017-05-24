@@ -13,7 +13,7 @@ class CreateMeetingSeriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('meeting_series', function (Blueprint $table) {
+        \Schema::create('meeting_series', function (Blueprint $table) {
 
             $table->increments('id');
             $table->integer('meeting_count')->unsigned();
@@ -30,6 +30,6 @@ class CreateMeetingSeriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meeting_series');
+        \Schema::dropIfExists('meeting_series');
     }
 }
