@@ -10,4 +10,9 @@ class Student extends Model
     {
         return $this->hasMany('Participation');
     }
+
+    function student_notifications()
+    {
+        return $this->hasMany('StudentNotification');
+    }
 }

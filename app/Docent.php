@@ -10,4 +10,9 @@ class Docent extends Model
     {
         return $this->hasMany('MeetingSeries');
     }
+
+    function docent_notifications()
+    {
+        return $this->hasMany('DocentNotification');
+    }
 }
