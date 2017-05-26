@@ -24,6 +24,8 @@ XAMPP-Konfiguration:
 5. localhost/phpmyadmin im Browser aufrufen
 6. Neue Datenbank "wd" anlegen
 
+Der MySQL-Server muss immer über das Control-Panel gestartet werden, wenn in der Entwicklung auf die Datenbank zugegriffen werden soll.
+
 Laravel-Konfiguration anpassen:
 
 1. .env-Datei öffnen
