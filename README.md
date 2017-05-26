@@ -14,3 +14,19 @@ Nach erstem Pull beachten:
 Datenbankverbindung:
 
 Jeder entwickelt mit Hilfe eines lokalen (!) MySQL-Servers. Hierfür eignet sich beispielsweise XAMPP.
+
+XAMPP-Konfiguration:
+
+1. Downloaden (https://www.apachefriends.org/xampp-files/5.6.30/xampp-win32-5.6.30-1-VC11-installer.exe)
+2. Installieren
+3. Control-Panel als Admin öffnen
+4. Apache- und MySQL-Server starten
+5. localhost/phpmyadmin im Browser aufrufen
+6. Neue Datenbank "wd" anlegen
+
+Laravel-Konfiguration anpassen:
+
+1. .env-Datei öffnen
+2. DB_HOST=localhost
+3. DB_USERNAME=root
+4. DB_PASSWORD= [hinter dem = kommt nichts]
