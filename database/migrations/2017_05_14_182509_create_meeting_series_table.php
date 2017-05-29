@@ -19,6 +19,7 @@ class CreateMeetingSeriesTable extends Migration
             $table->integer('meeting_count')->unsigned();
             $table->integer('docent_id')->unsigned();
             $table->foreign('docent_id')->references('id')->on('docents')->onDelete('cascade');
+            $table->index('docent_id');
             $table->timestamps();
         });
     }
