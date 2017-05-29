@@ -143,4 +143,9 @@ class DocentController extends Controller
 
         return response()->json($docents);
     }
+
+    public function getDocentNotifications($id)
+    {
+
+    }
 }

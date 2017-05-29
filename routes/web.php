@@ -38,3 +38,15 @@ Route::resource('meeting', 'MeetingController');
 Route::resource('meetingseries', 'MeetingSeriesController');
 
 Route::resource('student', 'StudentController');
+
+Route::resource('studentnotification', 'StudentNotificationController');
+
+Route::resource('docentnotification', 'DocentNotificationController');
+
+Route::get('student/{id}/notification', 'StudentController@getStudentNotifications');
+
+Route::get('docent/{id}/notification', 'DocentController@getDocentNotifications');
+
+Route::post('meeting/{id}/participation', 'MeetingController@create');
+
+Route::delete('meeting/{id}/participation', 'MeetingController@delete');

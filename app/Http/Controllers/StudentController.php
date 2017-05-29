@@ -106,4 +106,9 @@ class StudentController extends Controller
         $student->delete();
         return redirect()->route('/');
     }
+
+    public function getStudentNotifications($id)
+    {
+
+    }
 }
