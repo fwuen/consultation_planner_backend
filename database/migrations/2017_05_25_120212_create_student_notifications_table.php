@@ -15,15 +15,12 @@ class CreateStudentNotificationsTable extends Migration
     {
         Schema::create('student_notifications', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('student_id')->unsigned();
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->index('student_id');
             $table->integer('message_id')->unsigned();
             $table->foreign('message_id')->references('id')->on('notification_messages')->onDelete('cascade');
             $table->index('message_id');
-            $table->integer('meeting_id')->unsigned();
-            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
-            $table->index('meeting_id');
+            $table->integer('participation_id')->unsigned();
+            $table->foreign('participation_id')->references('id')->on('participations')->onDelete('cascade');
+            $table->index('participation_id');
             $table->boolean('seen');
             $table->timestamps();
         });

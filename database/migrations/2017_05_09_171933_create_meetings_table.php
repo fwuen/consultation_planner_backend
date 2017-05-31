@@ -26,6 +26,7 @@ class CreateMeetingsTable extends Migration
             $table->string('description_private', 500);
             $table->string('room', 10);
             $table->dateTime('last_enrollment');
+            $table->boolean('cancelled');
             $table->timestamps();
         });
     }
