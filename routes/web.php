@@ -29,24 +29,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('docent/search/{term}', 'DocentController@search');
-
 Route::resource('docent', 'DocentController');
-
-Route::resource('meeting', 'MeetingController');
-
-Route::resource('meetingseries', 'MeetingSeriesController');
+Route::get('docent/search/{term}', 'DocentController@search');
+Route::get('docent/{id}/meeting', 'DocentController@getMeetingsByDocent');
+Route::post('docent/{id}/meeting', 'DocentController@createMeeting');
+Route::put('docent/{id}/meeting', 'DocentController@editMeeting');
+Route::get('docent/{id}/notification', 'DocentController@getNotificationsByDocent');
+Route::post('docent/{id}/meetingseries', 'DocentController@createMeetingSeries');
 
 Route::resource('student', 'StudentController');
-
-Route::resource('studentnotification', 'StudentNotificationController');
-
-Route::resource('docentnotification', 'DocentNotificationController');
-
-Route::get('student/{id}/notification', 'StudentController@getStudentNotifications');
-
-Route::get('docent/{id}/notification', 'DocentController@getDocentNotifications');
-
-Route::post('meeting/{id}/participation', 'MeetingController@create');
-
-Route::delete('meeting/{id}/participation', 'MeetingController@delete');
+Route::post('student/{id}/participation', 'StudentController@createParticipation');
+Route::put('student/{id}/participation', 'StudentController@editParticipation');
+Route::delete('student/{id}/participation', 'StudentController@deleteParticipation');
+Route::get('student/{id}/participation', 'StudentController@getParticipationsByStudent');
+Route::get('student/{id}/notification', 'StudentController@getNotificationsByStudent');
