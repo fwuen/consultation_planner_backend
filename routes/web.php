@@ -35,7 +35,6 @@ Route::get('docent/{id}/meeting', 'DocentController@getMeetingsByDocent');
 Route::post('docent/{id}/meeting', 'DocentController@createMeeting');
 Route::put('docent/{id}/meeting', 'DocentController@editMeeting');
 Route::get('docent/{id}/notification', 'DocentController@getNotificationsByDocent');
-Route::post('docent/{id}/meetingseries', 'DocentController@createMeetingSeries');
 
 Route::resource('student', 'StudentController');
 Route::post('student/{id}/participation', 'StudentController@createParticipation');
