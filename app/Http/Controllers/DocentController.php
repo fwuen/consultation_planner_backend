@@ -34,7 +34,7 @@ class DocentController extends Controller
 
         $docent->save();
 
-        return redirect()->route('/');
+        return redirect('/docent/'.$docent->id);
     }
 
     /**
@@ -71,7 +71,7 @@ class DocentController extends Controller
         $docent->academic_title = $request->get('academic_title');
 
         $docent->save();
-        return redirect()->route('/');
+        return redirect('/docent/'.$docent->id);
     }
 
     /**
@@ -157,7 +157,7 @@ class DocentController extends Controller
         $meeting->meeting_series_id = $meeting_series->id;
         $meeting->save();
 
-        return redirect()->route('/');
+        return redirect('/docent/'.$id.'/meeting');
     }
 
     public function updateMeeting(Request $request, $id)
@@ -190,7 +190,7 @@ class DocentController extends Controller
         $meeting->cancelled = $request->get('cancelled');
         $meeting->save();
 
-        return redirect()->route('/');
+        return redirect('/docent/'.$id.'/meeting');
     }
 
     public function getNotificationsByDocent($id)
