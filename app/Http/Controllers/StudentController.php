@@ -64,40 +64,4 @@ class StudentController extends Controller
         return redirect()->route('/');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Student $student)
-    {
-        $student->delete();
-        return redirect()->route('/');
-    }
-
-    public function createParticipation($id)
-    {
-
-    }
-
-    public function updateParticipation($id)
-    {
-
-    }
-
-    public function deleteParticipation($id)
-    {
-
-    }
-
-    public function getParticipationsByStudent($id)
-    {
-
-    }
-
-    public function getNotificationsByStudent($id)
-    {
-
-    }
 }
