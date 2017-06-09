@@ -27,6 +27,8 @@ class CreateMeetingsTable extends Migration
             $table->string('room', 10);
             $table->dateTime('last_enrollment');
             $table->boolean('cancelled');
+            $table->integer('meeting_series_id')->unsigned();
+            $table->foreign('meeting_series_id')->references('id')->on('meeting_series')->onDelete('cascade');
             $table->timestamps();
         });
     }

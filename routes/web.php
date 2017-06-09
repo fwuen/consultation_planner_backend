@@ -32,7 +32,7 @@ Route::get('/', function () {
 Route::resource('docent', 'DocentController');
 Route::get('docent/search/{term}', 'DocentController@search');
 Route::get('docent/{id}/meeting', 'DocentController@getMeetingsByDocent');
-Route::post('docent/{id}/meeting', 'DocentController@createMeeting');
+Route::post('docent/{id}/meeting', 'DocentController@storeMeeting');
 Route::put('docent/{id}/meeting', 'DocentController@updateMeeting');
 Route::get('docent/{id}/notification', 'DocentController@getNotificationsByDocent');
 
