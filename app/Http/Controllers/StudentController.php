@@ -8,26 +8,6 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //Wird nicht benötigt
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //Wird nicht benötigt
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -59,17 +39,6 @@ class StudentController extends Controller
     public function show(Student $student)
     {
         return response()->json($student);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Student  $student
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Student $student)
-    {
-        //Wird nicht benötigt
     }
 
     /**
@@ -107,7 +76,27 @@ class StudentController extends Controller
         return redirect()->route('/');
     }
 
-    public function getStudentNotifications($id)
+    public function createParticipation($id)
+    {
+
+    }
+
+    public function updateParticipation($id)
+    {
+
+    }
+
+    public function deleteParticipation($id)
+    {
+
+    }
+
+    public function getParticipationsByStudent($id)
+    {
+
+    }
+
+    public function getNotificationsByStudent($id)
     {
 
     }

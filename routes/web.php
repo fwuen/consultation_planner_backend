@@ -33,12 +33,12 @@ Route::resource('docent', 'DocentController');
 Route::get('docent/search/{term}', 'DocentController@search');
 Route::get('docent/{id}/meeting', 'DocentController@getMeetingsByDocent');
 Route::post('docent/{id}/meeting', 'DocentController@createMeeting');
-Route::put('docent/{id}/meeting', 'DocentController@editMeeting');
+Route::put('docent/{id}/meeting', 'DocentController@updateMeeting');
 Route::get('docent/{id}/notification', 'DocentController@getNotificationsByDocent');
 
 Route::resource('student', 'StudentController');
 Route::post('student/{id}/participation', 'StudentController@createParticipation');
-Route::put('student/{id}/participation', 'StudentController@editParticipation');
+Route::put('student/{id}/participation', 'StudentController@updateParticipation');
 Route::delete('student/{id}/participation', 'StudentController@deleteParticipation');
 Route::get('student/{id}/participation', 'StudentController@getParticipationsByStudent');
 Route::get('student/{id}/notification', 'StudentController@getNotificationsByStudent');

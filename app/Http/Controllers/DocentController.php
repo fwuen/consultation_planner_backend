@@ -9,32 +9,6 @@ use Illuminate\Http\Request;
 class DocentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //Wird nicht benötigt
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        /*
-         * Zeigt im Frontend das entsprechende Formular zum Erzeugen der neuen Ressource
-         * Dozenten müssen allerdings nicht über ein Formular erzeugt werden
-         * Dozenten werden nach dem ersten Login mit dem SSO-Dienst in der Datenbank abgelegt
-         * Daher wird hier keine view zurückgegeben
-         */
-        //Wird nicht benötigt
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -70,18 +44,6 @@ class DocentController extends Controller
     public function show(Docent $docent)
     {
         return response()->json($docent);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Docent  $docent
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Docent $docent)
-    {
-        //Analog zu create()
-        //Wird nicht benötigt
     }
 
     /**
@@ -144,7 +106,22 @@ class DocentController extends Controller
         return response()->json($docents);
     }
 
-    public function getDocentNotifications($id)
+    public function getMeetingsByDocent($id)
+    {
+
+    }
+
+    public function createMeeting($id)
+    {
+
+    }
+
+    public function updateMeeting($id)
+    {
+
+    }
+
+    public function getNotificationsByDocent($id)
     {
 
     }
