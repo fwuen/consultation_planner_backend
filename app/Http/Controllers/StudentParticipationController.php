@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 //TODO sämtliche updates (und deletes) gehen noch nicht
 class StudentParticipationController extends Controller
 {
+    public function show($id, Participation $participation)
+    {
+        return response()->json($participation);
+    }
+
     public function index($id)
     {
         $meetings = Participation::where('student_id', '=', $id)->join('meetings', 'participations.meeting_id', '=', 'meetings.id')->select('meetings.*')->get();

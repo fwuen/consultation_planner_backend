@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Participation;
+use App\Student;
+use App\StudentNotification;
 use Illuminate\Database\Eloquent\Collection;
 use App\Meeting;
 use App\MeetingSeries;
@@ -8,6 +11,11 @@ use Illuminate\Http\Request;
 
 class DocentMeetingController extends Controller
 {
+    public function show($id, Meeting $meeting)
+    {
+        return response()->json($meeting);
+    }
+
     public function index($id) {
         $meeting_series = MeetingSeries::where('docent_id', '=', $id)->get();
 
@@ -88,6 +96,34 @@ class DocentMeetingController extends Controller
         $meeting->cancelled = $request->get('cancelled');
         $meeting->save();
 
+        $this->notify($meeting->id);
+
         return redirect('/docent/' . $id . '/meeting');
+    }
+
+    private function notify($meetingid)
+    {
+        $participations = Participation::where('meeting_id', '=', $meetingid)->where('email_notification_student', '=', 1)->get();
+
+        $students = new Collection();
+        foreach ($participations as $participation)
+        {
+            $students->push(Student::find($participation->student_id));
+            //TODO Verweise auf notification message mit den richtigen IDs versehen
+            $studentNotification = new StudentNotification();
+            $studentNotification->message_id = 1;
+            $studentNotification->participation_id = $participation->id;
+            $studentNotification->student_id = $participation->student_id;
+            $studentNotification->seen = 0;
+            $studentNotification->save();
+        }
+        foreach ($students as $student)
+        {
+            //TODO mail view
+            \Mail::send('welcome', ['student' => $student], function ($m) use ($student) {
+                $m->to($student->email)->subject('Test');
+            });
+        }
+
     }
 }
