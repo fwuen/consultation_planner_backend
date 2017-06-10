@@ -7,6 +7,7 @@ use App\Meeting;
 use App\MeetingSeries;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 //TODO: was passiert, wenn die Validierung ergibt, dass die Daten nicht korrekt sind? --> irgendwie behandeln?
 class DocentController extends Controller
@@ -14,12 +15,12 @@ class DocentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             'email' => 'required|email|max:255',
@@ -34,13 +35,13 @@ class DocentController extends Controller
 
         $docent->save();
 
-        return redirect('/docent/'.$docent->id);
+        return redirect('/docent/' . $docent->id);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Docent  $docent
+     * @param  \App\Docent $docent
      * @return \Illuminate\Http\Response
      */
     public function show(Docent $docent)
@@ -51,32 +52,39 @@ class DocentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Docent  $docent
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Docent $docent
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Docent $docent)
     {
         //Analog zu store()
-        $this->validate($request,[
+        $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
             'email' => 'required|email|max:255',
             'academic_title' => 'required|max:50'
         ]);
 
+        $dbrec = Docent::findOrFail($docent->id);
+        $input = $request->all();
+        $dbrec->fill($input)->save();
+
+        /*
         $docent->firstname = $request->get('firstname');
         $docent->lastname = $request->get('lastname');
         $docent->email = $request->get('email');
         $docent->academic_title = $request->get('academic_title');
 
         $docent->save();
-        return redirect('/docent/'.$docent->id);
+        */
+        return redirect('/docent/' . $docent->id);
     }
+
     /**
      * Search for specific resources by term.
      *
-     * @param  String  $term
+     * @param  String $term
      * @return \Illuminate\Support\Collection $docents
      */
     public function search($term)
@@ -84,10 +92,10 @@ class DocentController extends Controller
         $termArray = explode(" ", $term);
 
         $docents = \DB::table('docents')
-            ->where(function ($query) use($termArray) {
+            ->where(function ($query) use ($termArray) {
                 foreach ($termArray as $value) {
-                    $query->orWhere('lastname', 'like', '%'.$value.'%');
-                    $query->orWhere('firstname', 'like', '%'.$value.'%');
+                    $query->orWhere('lastname', 'like', '%' . $value . '%');
+                    $query->orWhere('firstname', 'like', '%' . $value . '%');
                 }
             })->get();
 

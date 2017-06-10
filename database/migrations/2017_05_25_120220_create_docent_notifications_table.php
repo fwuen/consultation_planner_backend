@@ -21,6 +21,9 @@ class CreateDocentNotificationsTable extends Migration
             $table->integer('docent_id')->unsigned();
             $table->foreign('docent_id')->references('id')->on('docents')->onDelete('cascade');
             $table->index('docent_id');
+            $table->integer('meeting_id')->unsigned();
+            $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
+            $table->index('meeting_id');
             $table->boolean('seen');
             $table->timestamps();
         });

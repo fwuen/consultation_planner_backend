@@ -21,6 +21,9 @@ class CreateStudentNotificationsTable extends Migration
             $table->integer('participation_id')->unsigned();
             $table->foreign('participation_id')->references('id')->on('participations')->onDelete('cascade');
             $table->index('participation_id');
+            $table->integer('student_id')->unsigned();
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
+            $table->index('student_id');
             $table->boolean('seen');
             $table->timestamps();
         });

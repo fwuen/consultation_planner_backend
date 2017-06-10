@@ -22,10 +22,10 @@ class DocentMeetingController extends Controller
 
     public function store($id, Request $request)
     {
-        //TODO required datetime oder date
+        //TODO required datetime oder date, mal gucken, obs klappt
         $this->validate($request,[
-            'start' => 'required',
-            'end' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
             'slots' => 'required|max:11',
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
@@ -33,7 +33,7 @@ class DocentMeetingController extends Controller
             'description_public' => 'required|max:500',
             'description_private' => 'required|max:500',
             'room' => 'required|max:10',
-            'last_enrollment' => 'required',
+            'last_enrollment' => 'required|date|before:start',
             'cancelled' => 'required|max:1'
         ]);
 
@@ -62,8 +62,8 @@ class DocentMeetingController extends Controller
     public function update($id, Request $request, Meeting $meeting)
     {
         $this->validate($request,[
-            'start' => 'required',
-            'end' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
             'slots' => 'required|max:11',
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
@@ -71,7 +71,7 @@ class DocentMeetingController extends Controller
             'description_public' => 'required|max:500',
             'description_private' => 'required|max:500',
             'room' => 'required|max:10',
-            'last_enrollment' => 'required',
+            'last_enrollment' => 'required|date|before:start',
             'cancelled' => 'required|max:1'
         ]);
 

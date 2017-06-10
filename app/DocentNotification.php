@@ -16,4 +16,9 @@ class DocentNotification extends Model
         return $this->belongsTo('Docent');
     }
 
+    function meeting()
+    {
+        return $this->belongsTo('Meeting');
+    }
+
 }

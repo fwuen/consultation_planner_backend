@@ -15,4 +15,9 @@ class Meeting extends Model
     {
         return $this->belongsTo('MeetingSeries');
     }
+
+    function docent_notification()
+    {
+        return $this->hasMany('DocentNotification');
+    }
 }

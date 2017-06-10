@@ -21,8 +21,8 @@ class StudentParticipationController extends Controller
         $this->validate($request,[
             'student_id' => 'required|max:10|unsigned',
             'meeting_id' => 'required|max:10|unsigned',
-            'start' => 'required',
-            'end' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
         ]);
 
@@ -40,8 +40,8 @@ class StudentParticipationController extends Controller
         $this->validate($request,[
             'student_id' => 'required|max:10|unsigned',
             'meeting_id' => 'required|max:10|unsigned',
-            'start' => 'required',
-            'end' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
         ]);
 
