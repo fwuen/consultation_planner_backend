@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocentNotification extends Model
 {
+    protected $fillable = ['seen'];
     function notification_messages()
     {
         return $this->hasOne('NotificationMessage');
