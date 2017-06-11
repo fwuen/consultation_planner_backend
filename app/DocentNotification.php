@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DocentNotification extends Model
 {
+    protected $fillable = ['seen'];
     function notification_messages()
     {
         return $this->hasOne('NotificationMessage');
@@ -14,6 +15,11 @@ class DocentNotification extends Model
     function docent()
     {
         return $this->belongsTo('Docent');
+    }
+
+    function meeting()
+    {
+        return $this->belongsTo('Meeting');
     }
 
 }
