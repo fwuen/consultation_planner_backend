@@ -102,17 +102,17 @@ class StudentParticipationController extends Controller
             switch($typeOfNotification) {
                 case 'store':
                     \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Test');
+                        $m->to($docent->email)->subject('Neue Anmeldung für Ihre Sprechstunde');
                     });
                     break;
                 case 'update':
                     \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Test');
+                        $m->to($docent->email)->subject('Geänderte Anmeldung für Ihre Sprechstunde');
                     });
                     break;
                 case 'delete':
                     \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Test');
+                        $m->to($docent->email)->subject('Gelöschte Anmeldung für Ihre Sprechstunde');
                     });
                     break;
             }
