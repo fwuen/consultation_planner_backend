@@ -96,31 +96,35 @@ class DocentMeetingController extends Controller
         $meeting->cancelled = $request->get('cancelled');
         $meeting->save();
 
-        $this->notify($meeting->id);
+        $this->notifyRelevantStudents($meeting->id);
 
         return redirect('/docent/' . $id . '/meeting');
     }
 
-    private function notify($meetingid)
+    private function notifyRelevantStudents($meetingId)
     {
-        $participations = Participation::where('meeting_id', '=', $meetingid)->where('email_notification_student', '=', 1)->get();
+        $participations = Participation::where('meeting_id', '=', $meetingId)->get();
 
         $students = new Collection();
         foreach ($participations as $participation)
         {
-            $students->push(Student::find($participation->student_id));
+            if($participation->email_notification_student == 1)
+            {
+                $students->push(Student::find($participation->student_id));
+            }
             //TODO Verweise auf notification message mit den richtigen IDs versehen
             $studentNotification = new StudentNotification();
-            $studentNotification->message_id = 1;
+            $studentNotification->message_id = 4;
             $studentNotification->participation_id = $participation->id;
             $studentNotification->student_id = $participation->student_id;
             $studentNotification->seen = 0;
             $studentNotification->save();
         }
+
         foreach ($students as $student)
         {
             //TODO mail view
-            \Mail::send('welcome', ['student' => $student], function ($m) use ($student) {
+            \Mail::send('studen.notification.update', ['student' => $student], function ($m) use ($student) {
                 $m->to($student->email)->subject('Test');
             });
         }
