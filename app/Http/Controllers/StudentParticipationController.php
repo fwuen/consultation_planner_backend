@@ -19,7 +19,7 @@ class StudentParticipationController extends Controller
 
     public function index($id)
     {
-        $meetings = Participation::where('student_id', '=', $id)->join('meetings', 'participations.meeting_id', '=', 'meetings.id')->select('meetings.*')->get();
+        $meetings = Participation::where('student_id', '=', $id)->get();
         return response()->json($meetings);
     }
 
@@ -27,8 +27,8 @@ class StudentParticipationController extends Controller
     {
         //TODO datetime validate
         $this->validate($request,[
-            'student_id' => 'required|max:10|unsigned',
-            'meeting_id' => 'required|max:10|unsigned',
+            'student_id' => 'required|max:10',
+            'meeting_id' => 'required|max:10',
             'start' => 'required|date',
             'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
@@ -48,8 +48,8 @@ class StudentParticipationController extends Controller
     public function update($id, Request $request, Participation $participation)
     {
         $this->validate($request,[
-            'student_id' => 'required|max:10|unsigned',
-            'meeting_id' => 'required|max:10|unsigned',
+            'student_id' => 'required|max:10',
+            'meeting_id' => 'required|max:10',
             'start' => 'required|date',
             'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
@@ -59,6 +59,7 @@ class StudentParticipationController extends Controller
         $participation->meeting_id = $request->get('meeting_id');
         $participation->start = $request->get('start');
         $participation->end = $request->get('end');
+        $participation->save();
 
         $this->notifyRelevantDocent($participation->meeting_id, 'update');
 
@@ -100,22 +101,21 @@ class StudentParticipationController extends Controller
             //TODO views für e-mail benachrichtigung
             switch($typeOfNotification) {
                 case 'store':
-                    \Mail::send('docent.notification.store', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Test');
                     });
                     break;
                 case 'update':
-                    \Mail::send('docent.notification.update', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Test');
                     });
                     break;
                 case 'delete':
-                    \Mail::send('docent.notification.delete', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Test');
                     });
                     break;
             }
-
         }
     }
 }

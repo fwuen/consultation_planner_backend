@@ -25,7 +25,7 @@
 |
 */
 
-Route::get('/', ['as' => 'toRoot'], function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
