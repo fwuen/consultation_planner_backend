@@ -13,6 +13,7 @@ class DocentMeetingController extends Controller
 {
     public function show($id, Meeting $meeting)
     {
+        $meeting->checkDates();
         return response()->json($meeting);
     }
 
@@ -23,8 +24,13 @@ class DocentMeetingController extends Controller
 
         foreach($meeting_series as $series) {
             $meetings_in_series = Meeting::where('meeting_series_id', '=', $series->id)->get();
+            //TODO prüfen, ob hier anschließend die aktuellen Meetings oder veraltete zurückgegeben werden, da  man sich die Meetings nach dem Update nicht nochmal explizit holt!
+            foreach($meetings_in_series as $meeting) {
+                $meeting->checkDates();
+            }
             $meetings->add($meetings_in_series);
         }
+
         return response()->json($meetings);
     }
 
@@ -41,8 +47,7 @@ class DocentMeetingController extends Controller
             'description_public' => 'required|max:500',
             'description_private' => 'required|max:500',
             'room' => 'required|max:10',
-            'last_enrollment' => 'required|date|before:start',
-            'cancelled' => 'required|max:1'
+            'last_enrollment' => 'required|date|before:start'
         ]);
 
         $meeting_series = new MeetingSeries;
@@ -60,8 +65,9 @@ class DocentMeetingController extends Controller
         $meeting->description_private = $request->get('description_private');
         $meeting->room = $request->get('room');
         $meeting->last_enrollment = $request->get('last_enrollment');
-        $meeting->cancelled = $request->get('cancelled');
+        $meeting->cancelled = 0;
         $meeting->meeting_series_id = $meeting_series->id;
+        $meeting->has_passed = 0;
         $meeting->save();
 
         return redirect('/docent/' . $id . '/meeting');

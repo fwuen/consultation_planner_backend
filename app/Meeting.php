@@ -18,7 +18,8 @@ class Meeting extends Model
         'room',
         'last_enrollment',
         'cancelled',
-        'participants_count'];
+        'participants_count',
+        'has_passed'];
     function participations()
     {
         return $this->hasMany('Participation');
@@ -32,5 +33,13 @@ class Meeting extends Model
     function docent_notification()
     {
         return $this->hasMany('DocentNotification');
+    }
+
+    //TODO checken, ob die überprüfung so passt
+    public function checkDates() {
+        if(strtotime(''.($this->start)) < strtotime('now')) {
+            $this->has_passed = 1;
+            $this->save();
+        }
     }
 }
