@@ -29,6 +29,7 @@ class CreateMeetingsTable extends Migration
             $table->boolean('cancelled');
             $table->integer('meeting_series_id')->unsigned();
             $table->foreign('meeting_series_id')->references('id')->on('meeting_series')->onDelete('cascade');
+            $table->boolean('participants_count');
             $table->timestamps();
         });
     }

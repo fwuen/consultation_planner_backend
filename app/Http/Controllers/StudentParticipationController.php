@@ -40,6 +40,10 @@ class StudentParticipationController extends Controller
         $participation->start = $request->get('start');
         $participation->end = $request->get('end');
 
+        $meeting = Meeting::find($participation->meeting_id);
+        $meeting->participants_count = $meeting->participants_count + 1;
+        $meeting->store();
+
         $this->notifyRelevantDocent($participation->meeting_id, 'store');
 
         return redirect('student/' . $id . '/participation');
@@ -68,8 +72,11 @@ class StudentParticipationController extends Controller
 
     public function destroy($id, Participation $participation)
     {
-        $participation->delete();
+        $meeting = Meeting::find($participation->meeting_id);
+        $meeting->participants_count = $meeting->participants_count - 1;
+        $meeting->save();
         $this->notifyRelevantDocent($participation->meeting_id, 'delete');
+        $participation->delete();
         return redirect('student/' . $id . '/participation');
     }
 
