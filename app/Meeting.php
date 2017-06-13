@@ -17,7 +17,8 @@ class Meeting extends Model
         'description_private',
         'room',
         'last_enrollment',
-        'cancelled'];
+        'cancelled',
+        'participants_count'];
     function participations()
     {
         return $this->hasMany('Participation');
