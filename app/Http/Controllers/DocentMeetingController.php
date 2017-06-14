@@ -51,7 +51,7 @@ class DocentMeetingController extends Controller
                     $students = Student::where('id', '=', $participation->student_id)->get();
                 }
                 $singleCoalition = new MeetingStudentCoalition($meeting, $students);
-                array_push($meetingStudentCoalitions, $singleCoalition);
+                $meetingStudentCoalitions[] = $singleCoalition;
             }
             $meetings->add($meetingsInSeries);
         }
