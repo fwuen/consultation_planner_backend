@@ -143,7 +143,7 @@ class DocentMeetingController extends Controller
         {
             if($participation->email_notification_student == 1)
             {
-                $students->push(Student::find($participation->student_id));
+                $students->push(Student::findOrFail($participation->student_id));
             }
             //TODO Verweise auf notification message mit den richtigen IDs versehen
             $studentNotification = new StudentNotification();

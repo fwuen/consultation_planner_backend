@@ -40,7 +40,7 @@ class StudentParticipationController extends Controller
         $participation->end = $request->get('end');
         $participation->email_notification_student = $request->get('email_notification_student');
 
-        $meeting = Meeting::find($participation->meeting_id);
+        $meeting = Meeting::findOrFail($participation->meeting_id);
         $meeting->participants_count = $meeting->participants_count + 1;
         if($meeting->participants_count <= $meeting->max_participants) {
             $participation->save();
@@ -74,7 +74,7 @@ class StudentParticipationController extends Controller
 
     public function destroy($id, Participation $participation)
     {
-        $meeting = Meeting::find($participation->meeting_id);
+        $meeting = Meeting::findOrFail($participation->meeting_id);
         $meeting->participants_count = $meeting->participants_count - 1;
         $meeting->save();
         $this->notifyRelevantDocent($participation->meeting_id, 'delete');
@@ -84,9 +84,9 @@ class StudentParticipationController extends Controller
 
     private function notifyRelevantDocent($meetingId, $typeOfNotification)
     {
-        $meeting = Meeting::find($meetingId);
-        $meetingSeries = MeetingSeries::find($meeting->meeting_series_id);
-        $docent = Docent::find($meetingSeries->docent_id);
+        $meeting = Meeting::findOrFail($meetingId);
+        $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
+        $docent = Docent::findOrFail($meetingSeries->docent_id);
 
         $docentNotification = new DocentNotification();
         switch ($typeOfNotification) {

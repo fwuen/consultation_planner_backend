@@ -16,7 +16,7 @@ class StudentMeetingController extends Controller
         $meetings = new Collection();
 
         foreach($participations as $participation) {
-            $meeting = Meeting::find($participation->meeting_id);
+            $meeting = Meeting::findOrFail($participation->meeting_id);
             $meeting->checkDates();
             $meetings->add($meeting);
         }
