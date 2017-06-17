@@ -37,7 +37,7 @@ class Meeting extends Model
 
     //TODO checken, ob die überprüfung so passt
     public function checkDates() {
-        if(strtotime(''.($this->start)) < strtotime('now')) {
+        if((strtotime(''.($this->end))-7200) < strtotime('now')) {
             $this->has_passed = 1;
             $this->save();
         }
