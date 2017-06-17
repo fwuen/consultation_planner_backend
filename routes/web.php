@@ -29,6 +29,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents');
 Route::resource('docent', 'DocentController');
 Route::resource('docent.meeting', 'DocentMeetingController');
 Route::resource('docent.notification', 'DocentNotificationController');
@@ -37,3 +38,4 @@ Route::get('docent/search/{term}', 'DocentController@search');
 Route::resource('student', 'StudentController');
 Route::resource('student.participation', 'StudentParticipationController');
 Route::resource('student.notification', 'StudentNotificationController');
+Route::resource('student.meeting', 'StudentMeetingController');

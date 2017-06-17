@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\MeetingStudentCoalition;
 use App\Participation;
 use App\Student;
 use App\StudentNotification;
@@ -13,30 +14,56 @@ class DocentMeetingController extends Controller
 {
     public function show($id, Meeting $meeting)
     {
-        $meeting->checkDates();
+        if($meeting->has_passed != 1) {
+            $meeting->checkDates();
+        }
         return response()->json($meeting);
     }
 
     public function index($id) {
-        $meeting_series = MeetingSeries::where('docent_id', '=', $id)->get();
+        $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
 
         $meetings = new Collection();
 
-        foreach($meeting_series as $series) {
-            $meetings_in_series = Meeting::where('meeting_series_id', '=', $series->id)->get();
+        foreach($meetingSeries as $series) {
+            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
             //TODO prüfen, ob hier anschließend die aktuellen Meetings oder veraltete zurückgegeben werden, da  man sich die Meetings nach dem Update nicht nochmal explizit holt!
-            foreach($meetings_in_series as $meeting) {
+            foreach($meetingsInSeries as $meeting) {
                 $meeting->checkDates();
             }
-            $meetings->add($meetings_in_series);
+            $meetings->add($meetingsInSeries);
         }
 
         return response()->json($meetings);
     }
 
+    public function indexWithStudents($id) {
+        $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
+
+        $meetings = new Collection();
+        $students = new Collection();
+        $meetingStudentCoalitions = new \Illuminate\Support\Collection();
+
+        foreach($meetingSeries as $series) {
+            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
+            foreach($meetingsInSeries as $meeting) {
+                $meeting->checkDates();
+                $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
+                foreach($participations as $participation) {
+                    $students = Student::where('id', '=', $participation->student_id)->get();
+                }
+                $singleCoalition = new MeetingStudentCoalition($meeting, $students, $participations);
+                $students = new Collection();
+                $meetingStudentCoalitions->push($singleCoalition);
+            }
+            $meetings->add($meetingsInSeries);
+        }
+
+        return response()->json($meetingStudentCoalitions);
+    }
+
     public function store($id, Request $request)
     {
-        //TODO required datetime oder date, mal gucken, obs klappt
         $this->validate($request,[
             'start' => 'required|date',
             'end' => 'required|date|after:start',

@@ -39,10 +39,14 @@ class StudentParticipationController extends Controller
         $participation->meeting_id = $request->get('meeting_id');
         $participation->start = $request->get('start');
         $participation->end = $request->get('end');
+        $participation->email_notification_student = $request->get('email_notification_student');
 
         $meeting = Meeting::find($participation->meeting_id);
         $meeting->participants_count = $meeting->participants_count + 1;
-        $meeting->store();
+        if($meeting->participants_count <= $meeting->max_participants) {
+            $participation->save();
+            $meeting->save();
+        }
 
         $this->notifyRelevantDocent($participation->meeting_id, 'store');
 
