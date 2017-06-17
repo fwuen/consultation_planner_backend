@@ -25,7 +25,6 @@ class StudentParticipationController extends Controller
 
     public function store($id, Request $request)
     {
-        //TODO datetime validate
         $this->validate($request,[
             'student_id' => 'required|max:10',
             'meeting_id' => 'required|max:10',
@@ -46,9 +45,8 @@ class StudentParticipationController extends Controller
         if($meeting->participants_count <= $meeting->max_participants) {
             $participation->save();
             $meeting->save();
+            $this->notifyRelevantDocent($participation->meeting_id, 'store');
         }
-
-        $this->notifyRelevantDocent($participation->meeting_id, 'store');
 
         return redirect('student/' . $id . '/participation');
     }
@@ -112,18 +110,18 @@ class StudentParticipationController extends Controller
             //TODO views für e-mail benachrichtigung
             switch($typeOfNotification) {
                 case 'store':
-                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Neue Anmeldung für Ihre Sprechstunde');
+                    \Mail::send('notify.meeting.newparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                        $m->to($docent->email)->subject('Neue Anmeldung zu Ihrer Sprechstunde');
                     });
                     break;
                 case 'update':
-                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Geänderte Anmeldung für Ihre Sprechstunde');
+                    \Mail::send('notify.meeting.updateparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                        $m->to($docent->email)->subject('Geänderte Anmeldung zu Ihrer Sprechstunde');
                     });
                     break;
                 case 'delete':
-                    \Mail::send('welcome', ['docent' => $docent], function ($m) use ($docent) {
-                        $m->to($docent->email)->subject('Gelöschte Anmeldung für Ihre Sprechstunde');
+                    \Mail::send('notify.meeting.deleteparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                        $m->to($docent->email)->subject('Abmeldung von Ihrer Sprechstunde');
                     });
                     break;
             }
