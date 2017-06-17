@@ -14,7 +14,9 @@ class DocentMeetingController extends Controller
 {
     public function show($id, Meeting $meeting)
     {
-        $meeting->checkDates();
+        if($meeting->has_passed != 1) {
+            $meeting->checkDates();
+        }
         return response()->json($meeting);
     }
 
@@ -40,7 +42,7 @@ class DocentMeetingController extends Controller
 
         $meetings = new Collection();
         $students = new Collection();
-        $meetingStudentCoalitions = array();
+        $meetingStudentCoalitions = new \Illuminate\Support\Collection();
 
         foreach($meetingSeries as $series) {
             $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
@@ -50,8 +52,9 @@ class DocentMeetingController extends Controller
                 foreach($participations as $participation) {
                     $students = Student::where('id', '=', $participation->student_id)->get();
                 }
-                $singleCoalition = new MeetingStudentCoalition($meeting, $students);
-                $meetingStudentCoalitions[] = $singleCoalition;
+                $singleCoalition = new MeetingStudentCoalition($meeting, $students, $participations);
+                $students = new Collection();
+                $meetingStudentCoalitions->push($singleCoalition);
             }
             $meetings->add($meetingsInSeries);
         }

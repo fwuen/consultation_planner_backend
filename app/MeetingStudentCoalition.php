@@ -2,15 +2,18 @@
 
 namespace App;
 
+
 class MeetingStudentCoalition
 {
-    private $meeting;
-    private $students;
+    public $meeting;
+    public $students;
+    public $participations;
 
-    public function __construct($meeting, $students)
+    public function __construct($meeting, $students, $participations)
     {
         $this->meeting = $meeting;
         $this->students = $students;
+        $this->participations = $participations;
     }
 
     public function setMeeting($meeting)
