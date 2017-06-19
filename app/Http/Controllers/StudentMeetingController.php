@@ -12,7 +12,6 @@ class StudentMeetingController extends Controller
     public function index($id)
     {
         $participations = Participation::where('student_id', '=', $id)->get();
-
         $meetings = new Collection();
 
         foreach($participations as $participation) {

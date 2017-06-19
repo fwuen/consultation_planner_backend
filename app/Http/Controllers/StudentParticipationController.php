@@ -65,6 +65,7 @@ class StudentParticipationController extends Controller
         $participation->meeting_id = $request->get('meeting_id');
         $participation->start = $request->get('start');
         $participation->end = $request->get('end');
+        $participation->email_notification_student = $request->get('email_notification_student');
         $participation->save();
 
         $this->notifyRelevantDocent($participation->meeting_id, 'update');

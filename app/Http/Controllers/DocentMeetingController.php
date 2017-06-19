@@ -22,7 +22,6 @@ class DocentMeetingController extends Controller
 
     public function index($id) {
         $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
-
         $meetings = new Collection();
 
         foreach($meetingSeries as $series) {
@@ -39,7 +38,6 @@ class DocentMeetingController extends Controller
 
     public function indexWithStudents($id) {
         $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
-
         $meetings = new Collection();
         $students = new Collection();
         $meetingStudentCoalitions = new \Illuminate\Support\Collection();
@@ -97,7 +95,7 @@ class DocentMeetingController extends Controller
         $meeting->has_passed = 0;
         $meeting->save();
 
-        return redirect('/docent/' . $id . '/meeting');
+        return redirect('docent/' . $id . '/meeting');
     }
 
     public function update($id, Request $request, Meeting $meeting)
@@ -131,7 +129,7 @@ class DocentMeetingController extends Controller
 
         $this->notifyRelevantStudents($meeting->id);
 
-        return redirect('/docent/' . $id . '/meeting');
+        return redirect('docent/' . $id . '/meeting');
     }
 
     private function notifyRelevantStudents($meetingId)
@@ -158,7 +156,7 @@ class DocentMeetingController extends Controller
         {
             //TODO mail view
             \Mail::send('notify.meeting.update', ['student' => $student], function ($m) use ($student) {
-                $m->to($student->email)->subject('Änderung an einer Sprechstunde');
+                $m->to($student->email)->subject('Aktualisierung einer Sprechstunde');
             });
         }
 

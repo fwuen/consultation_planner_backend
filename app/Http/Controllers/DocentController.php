@@ -35,7 +35,7 @@ class DocentController extends Controller
 
         $docent->save();
 
-        return redirect('/docent/' . $docent->id);
+        return redirect('docent/' . $docent->id);
     }
 
     /**
@@ -66,9 +66,9 @@ class DocentController extends Controller
             'academic_title' => 'required|max:50'
         ]);
 
-        $dbrec = Docent::findOrFail($docent->id);
-        $input = $request->all();
-        $dbrec->fill($input)->save();
+        //TODO prüfen, ob das geht, ansonsten auskommentierten Teil verwenden
+        $informationForDocentUpdate = $request->all();
+        $docent->fill($informationForDocentUpdate)->save();
 
         /*
         $docent->firstname = $request->get('firstname');
@@ -78,7 +78,7 @@ class DocentController extends Controller
 
         $docent->save();
         */
-        return redirect('/docent/' . $docent->id);
+        return redirect('docent/' . $docent->id);
     }
 
     /**
