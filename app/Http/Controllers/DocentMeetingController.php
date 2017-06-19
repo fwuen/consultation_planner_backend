@@ -154,7 +154,6 @@ class DocentMeetingController extends Controller
 
         foreach ($students as $student)
         {
-            //TODO mail view
             \Mail::send('notify.meeting.update', ['student' => $student], function ($m) use ($student) {
                 $m->to($student->email)->subject('Aktualisierung einer Sprechstunde');
             });

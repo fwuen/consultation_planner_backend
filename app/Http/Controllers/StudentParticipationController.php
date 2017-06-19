@@ -108,7 +108,6 @@ class StudentParticipationController extends Controller
 
         if($meeting->email_notification_docent == 1)
         {
-            //TODO views für e-mail benachrichtigung
             switch($typeOfNotification) {
                 case 'store':
                     \Mail::send('notify.meeting.newparticipation', ['docent' => $docent], function ($m) use ($docent) {
