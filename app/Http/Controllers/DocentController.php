@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-//TODO: was passiert, wenn die Validierung ergibt, dass die Daten nicht korrekt sind? --> nichts, geht halt nicht weiter
 class DocentController extends Controller
 {
     /**

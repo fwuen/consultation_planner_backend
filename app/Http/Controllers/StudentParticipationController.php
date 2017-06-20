@@ -9,7 +9,6 @@ use App\MeetingSeries;
 use App\Participation;
 use Illuminate\Http\Request;
 
-//TODO sämtliche updates (und deletes) gehen noch nicht
 class StudentParticipationController extends Controller
 {
     public function show($id, Participation $participation)
@@ -41,13 +40,20 @@ class StudentParticipationController extends Controller
         $participation->email_notification_student = $request->get('email_notification_student');
 
         $meeting = Meeting::findOrFail($participation->meeting_id);
-        $meeting->participants_count = $meeting->participants_count + 1;
-        if($meeting->participants_count <= $meeting->max_participants) {
+
+        //TODO hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
+        //TODO das hier ist ugnetestet!
+        if($meeting->slots == 1) {
+            $meeting->participants_count = $meeting->participants_count + 1;
+            if($meeting->participants_count <= $meeting->max_participants) {
+                $participation->save();
+                $meeting->save();
+            }
+        } else if($meeting->slots > 1) {
             $participation->save();
-            $meeting->save();
-            $this->notifyRelevantDocent($participation->meeting_id, 'store');
         }
 
+        $this->notifyRelevantDocent($participation->meeting_id, 'store');
         return redirect('student/' . $id . '/participation');
     }
 
@@ -76,6 +82,11 @@ class StudentParticipationController extends Controller
     public function destroy($id, Participation $participation)
     {
         $meeting = Meeting::findOrFail($participation->meeting_id);
+        //TODO das hier ist noch ungetestet
+        if($meeting->slots == 1) {
+            $meeting->participants_count = $meeting->participants_count - 1;
+            $meeting->save();
+        }
         $meeting->participants_count = $meeting->participants_count - 1;
         $meeting->save();
         $this->notifyRelevantDocent($participation->meeting_id, 'delete');

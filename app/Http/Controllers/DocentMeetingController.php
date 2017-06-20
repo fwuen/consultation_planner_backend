@@ -10,6 +10,7 @@ use App\Meeting;
 use App\MeetingSeries;
 use Illuminate\Http\Request;
 
+//TODO beim Erstellen von Meetings überprüfen, dass entweder Max participations oder slots auf 1 steht
 class DocentMeetingController extends Controller
 {
     public function show($id, Meeting $meeting)
@@ -93,6 +94,11 @@ class DocentMeetingController extends Controller
         $meeting->cancelled = 0;
         $meeting->meeting_series_id = $meeting_series->id;
         $meeting->has_passed = 0;
+
+        //TODO das hier ist ungetestet!
+        if($meeting->slots != 1 && $meeting->max_participations != 1)
+            return redirect('docent/' . $id . '/meeting', 400);
+
         $meeting->save();
 
         return redirect('docent/' . $id . '/meeting');
