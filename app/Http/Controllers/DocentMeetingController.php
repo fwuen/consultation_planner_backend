@@ -76,9 +76,9 @@ class DocentMeetingController extends Controller
             'last_enrollment' => 'required|date|before:start'
         ]);
 
-        $meeting_series = new MeetingSeries;
-        $meeting_series->docent_id = $id;
-        $meeting_series->save();
+        $meetingSeries = new MeetingSeries;
+        $meetingSeries->docent_id = $id;
+        $meetingSeries->save();
 
         $meeting = new Meeting;
         $meeting->start = $request->get('start');
@@ -92,14 +92,71 @@ class DocentMeetingController extends Controller
         $meeting->room = $request->get('room');
         $meeting->last_enrollment = $request->get('last_enrollment');
         $meeting->cancelled = 0;
-        $meeting->meeting_series_id = $meeting_series->id;
+        $meeting->meeting_series_id = $meetingSeries->id;
+        $meeting->participants_count = 0;
         $meeting->has_passed = 0;
 
         //TODO das hier ist ungetestet!
         if($meeting->slots != 1 && $meeting->max_participations != 1)
-            return redirect('docent/' . $id . '/meeting', 400);
+        {
+            $meetingSeries->delete();
+            return redirect('docent/' . $id . '/meeting');
+        }
 
         $meeting->save();
+
+        return redirect('docent/' . $id . '/meeting');
+    }
+
+    public function storeSeries($id, Request $request)
+    {
+        $numberOfMeetings = $request->count;
+
+        $meetingSeries = new MeetingSeries;
+        $meetingSeries->docent_id = $id;
+        $meetingSeries->save();
+
+        $this->validate($request, [
+            'meetings.*.start' => 'required|date',
+            'meetings.*.end' => 'required|date|after:meetings.*.start',
+            'meetings.*.max_participants' => 'required|max:11',
+            'meetings.*.email_notification_docent' => 'required|max:1',
+            'meetings.*.title' => 'required|max:50',
+            'meetings.*.description_public' => 'required|max:500',
+            'meetings.*.description_private' => 'required|max:500',
+            'meetings.*.room' => 'required|max:10',
+            'meetings.*.last_enrollment' => 'required|date|before:meetings.*.start',
+            'meetings.*.slots' => 'required|max:11',
+            'count' => 'required'
+        ]);
+
+        for($i = 0; $i < $numberOfMeetings; $i++)
+        {
+            $meeting = new Meeting;
+            $meeting->start = $request->input('meetings.' . $i . '.start');
+            $meeting->end = $request->input('meetings.' . $i . '.end');
+            $meeting->slots = $request->input('meetings.' . $i . '.slots');
+            $meeting->max_participants = $request->input('meetings.' . $i . '.max_participants');
+            $meeting->email_notification_docent = $request->input('meetings.' . $i . '.email_notification_docent');
+            $meeting->title = $request->input('meetings.' . $i . '.title');
+            $meeting->description_public = $request->input('meetings.' . $i . '.description_public');
+            $meeting->description_private = $request->input('meetings.' . $i . '.description_private');
+            $meeting->room = $request->input('meetings.' . $i . '.room');
+            $meeting->last_enrollment = $request->input('meetings.' . $i . '.last_enrollment');
+            $meeting->cancelled = 0;
+            $meeting->meeting_series_id = $meetingSeries->id;
+            $meeting->participants_count = 0;
+            $meeting->has_passed = 0;
+            //TODO das hier ist ungetestet!
+            if($meeting->slots != 1 && $meeting->max_participations != 1)
+            {
+                $meetingSeries->delete();
+                return redirect('docent/' . $id . '/meeting');
+            }
+
+            $meeting->save();
+        }
+
 
         return redirect('docent/' . $id . '/meeting');
     }

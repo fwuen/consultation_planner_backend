@@ -22,7 +22,7 @@ class DocentController extends Controller
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255',
+            'email' => 'required|email|max:255|unique:docents',
             'academic_title' => 'required|max:50'
         ]);
 
