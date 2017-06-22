@@ -14,9 +14,14 @@ class StudentMeetingController extends Controller
         $participations = Participation::where('student_id', '=', $id)->get();
         $meetings = new Collection();
 
-        foreach($participations as $participation) {
+        foreach($participations as $participation)
+        {
             $meeting = Meeting::findOrFail($participation->meeting_id);
-            $meeting->checkDates();
+            if($meeting->has_passed != 1)
+            {
+                $meeting->checkDates();
+            }
+            $meeting->participation = $participation;
             $meetings->add($meeting);
         }
 
@@ -25,6 +30,8 @@ class StudentMeetingController extends Controller
 
     public function show($id, Meeting $meeting)
     {
+        $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
+        $meeting->participations = $participations;
         if($meeting->has_passed != 1) {
             $meeting->checkDates();
         }
