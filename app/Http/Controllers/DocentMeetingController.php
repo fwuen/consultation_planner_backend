@@ -48,9 +48,11 @@ class DocentMeetingController extends Controller
             foreach($meetingsInSeries as $meeting) {
                 $meeting->checkDates();
                 $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
-                $meeting->participations = $participations;
+                //$meeting->participations = $participations;
                 foreach($participations as $participation) {
-                    $students->add(Student::findOrFail($participation->student_id));
+                    $student = Student::findOrFail($participation->student_id);
+                    $student->participation = $participation;
+                    $students->add($student);
                 }
                 $meeting->students = $students;
                 $students = new Collection();
