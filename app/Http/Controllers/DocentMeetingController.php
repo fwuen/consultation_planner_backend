@@ -115,12 +115,6 @@ class DocentMeetingController extends Controller
 
     public function storeSeries($id, Request $request)
     {
-        $numberOfMeetings = $request->count;
-
-        $meetingSeries = new MeetingSeries;
-        $meetingSeries->docent_id = $id;
-        $meetingSeries->save();
-
         $this->validate($request, [
             'meetings.*.start' => 'required|date',
             'meetings.*.end' => 'required|date|after:meetings.*.start',
@@ -132,8 +126,14 @@ class DocentMeetingController extends Controller
             'meetings.*.room' => 'required|max:10',
             'meetings.*.last_enrollment' => 'required|date|before:meetings.*.start',
             'meetings.*.slots' => 'required|max:11',
-            'count' => 'required'
+            'count' => 'required',
         ]);
+
+        $numberOfMeetings = $request->count;
+
+        $meetingSeries = new MeetingSeries;
+        $meetingSeries->docent_id = $id;
+        $meetingSeries->save();
 
         for($i = 0; $i < $numberOfMeetings; $i++)
         {
