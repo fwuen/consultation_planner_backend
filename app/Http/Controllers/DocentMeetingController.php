@@ -48,12 +48,15 @@ class DocentMeetingController extends Controller
             foreach($meetingsInSeries as $meeting) {
                 $meeting->checkDates();
                 $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
+                $meeting->participations = $participations;
                 foreach($participations as $participation) {
-                    $students = Student::where('id', '=', $participation->student_id)->get();
+                    $students->add(Student::findOrFail($participation->student_id));
                 }
-                $singleCoalition = new MeetingStudentCoalition($meeting, $students, $participations);
+                $meeting->students = $students;
                 $students = new Collection();
-                $meetingStudentCoalitions->push($singleCoalition);
+                //$singleCoalition = new MeetingStudentCoalition($meeting, $students, $participations);
+                //$students = new Collection();
+                $meetingStudentCoalitions->push($meeting);
             }
             $meetings->add($meetingsInSeries);
         }

@@ -25,7 +25,9 @@ class StudentMeetingController extends Controller
 
     public function show($id, Meeting $meeting)
     {
-        $meeting->checkDates();
+        if($meeting->has_passed != 1) {
+            $meeting->checkDates();
+        }
         return response()->json($meeting);
     }
 }

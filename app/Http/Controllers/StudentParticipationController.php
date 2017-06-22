@@ -41,7 +41,7 @@ class StudentParticipationController extends Controller
 
         $meeting = Meeting::findOrFail($participation->meeting_id);
 
-        //TODO hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
+        //hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
         //TODO das hier ist ugnetestet!
         if($meeting->slots == 1) {
             $meeting->participants_count = $meeting->participants_count + 1;

@@ -65,18 +65,11 @@ class DocentController extends Controller
             'academic_title' => 'required|max:50'
         ]);
 
-        //TODO prüfen, ob das geht, ansonsten auskommentierten Teil verwenden
-        $informationForDocentUpdate = $request->all();
-        $docent->fill($informationForDocentUpdate)->save();
-
-        /*
         $docent->firstname = $request->get('firstname');
         $docent->lastname = $request->get('lastname');
         $docent->email = $request->get('email');
         $docent->academic_title = $request->get('academic_title');
-
         $docent->save();
-        */
         return redirect('docent/' . $docent->id);
     }
 
