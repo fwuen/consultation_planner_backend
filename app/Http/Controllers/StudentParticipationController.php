@@ -24,13 +24,7 @@ class StudentParticipationController extends Controller
 
     public function store($id, Request $request)
     {
-        $this->validate($request,[
-            'student_id' => 'required|max:10',
-            'meeting_id' => 'required|max:10',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
-            'email_notification_student' => 'required'
-        ]);
+        $this->doBasicParticipationValidation($request);
 
         $participation = new Participation();
         $participation->student_id = $request->get('student_id');
@@ -59,13 +53,7 @@ class StudentParticipationController extends Controller
 
     public function update($id, Request $request, Participation $participation)
     {
-        $this->validate($request,[
-            'student_id' => 'required|max:10',
-            'meeting_id' => 'required|max:10',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
-            'email_notification_student' => 'required'
-        ]);
+        $this->doBasicParticipationValidation($request);
 
         $participation->student_id = $request->get('student_id');
         $participation->meeting_id = $request->get('meeting_id');
@@ -137,5 +125,16 @@ class StudentParticipationController extends Controller
                     break;
             }
         }
+    }
+
+    private function doBasicParticipationValidation(Request $request)
+    {
+        $this->validate($request,[
+            'student_id' => 'required|max:10',
+            'meeting_id' => 'required|max:10',
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
+            'email_notification_student' => 'required'
+        ]);
     }
 }

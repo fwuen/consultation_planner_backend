@@ -18,11 +18,7 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'firstname' => 'required|max:255|unique:students',
-            'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255'
-        ]);
+        $this->doBasicStudentValidation($request);
 
         $student = new Student;
         $student->firstname = $request->get('firstname');
@@ -53,11 +49,7 @@ class StudentController extends Controller
      */
     public function update(Request $request, Student $student)
     {
-        $this->validate($request, [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255'
-        ]);
+        $this->doBasicStudentValidation($request);
 
         $student->firstname = $request->get('firstname');
         $student->lastname = $request->get('lastname');
@@ -66,4 +58,12 @@ class StudentController extends Controller
         return redirect('student/' . $student->id);
     }
 
+    private function doBasicStudentValidation(Request $request)
+    {
+        $this->validate($request, [
+            'firstname' => 'required|max:255|unique:students',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255'
+        ]);
+    }
 }

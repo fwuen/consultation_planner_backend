@@ -28,7 +28,6 @@ class DocentMeetingController extends Controller
 
         foreach ($meetingSeries as $series) {
             $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
-            //TODO prüfen, ob hier anschließend die aktuellen Meetings oder veraltete zurückgegeben werden, da  man sich die Meetings nach dem Update nicht nochmal explizit holt!
             foreach ($meetingsInSeries as $meeting) {
                 if($meeting->has_passed != 1) {
                     $meeting->checkDates();
@@ -71,7 +70,7 @@ class DocentMeetingController extends Controller
         return response()->json($meetingStudentCoalitions);
     }
 
-    public function store($id, Request $request)
+    private function doBasicRequestValidation(Request $request)
     {
         $this->validate($request, [
             'start' => 'required|date',
@@ -84,6 +83,11 @@ class DocentMeetingController extends Controller
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start'
         ]);
+    }
+
+    public function store($id, Request $request)
+    {
+        $this->doBasicRequestValidation($request);
 
         $meetingSeries = new MeetingSeries;
         $meetingSeries->docent_id = $id;
@@ -117,16 +121,8 @@ class DocentMeetingController extends Controller
 
     public function storeSeries($id, Request $request)
     {
+        $this->doBasicRequestValidation($request);
         $this->validate($request, [
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
-            'slots' => 'required|max:11',
-            'max_participants' => 'required|max:11',
-            'email_notification_docent' => 'required|max:1',
-            'title' => 'required|max:50',
-            'description' => 'required|max:500',
-            'room' => 'required|max:10',
-            'last_enrollment' => 'required|date|before:start',
             'count' => 'required',
             'interval' => 'required'
         ]);
@@ -176,16 +172,8 @@ class DocentMeetingController extends Controller
 
     public function update($id, Request $request, Meeting $meeting)
     {
+        $this->doBasicRequestValidation($request);
         $this->validate($request, [
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
-            'slots' => 'required|max:11',
-            'max_participants' => 'required|max:11',
-            'email_notification_docent' => 'required|max:1',
-            'title' => 'required|max:50',
-            'description' => 'required|max:500',
-            'room' => 'required|max:10',
-            'last_enrollment' => 'required|date|before:start',
             'cancelled' => 'required|max:1'
         ]);
 

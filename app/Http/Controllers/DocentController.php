@@ -19,12 +19,7 @@ class DocentController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:docents',
-            'academic_title' => 'required|max:50'
-        ]);
+        $this->doBasicDocentValidation($request);
 
         $docent = new Docent;
         $docent->firstname = $request->get('firstname');
@@ -57,13 +52,7 @@ class DocentController extends Controller
      */
     public function update(Request $request, Docent $docent)
     {
-        //Analog zu store()
-        $this->validate($request, [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'academic_title' => 'required|max:50'
-        ]);
+        $this->doBasicDocentValidation($request);
 
         $docent->firstname = $request->get('firstname');
         $docent->lastname = $request->get('lastname');
@@ -92,5 +81,15 @@ class DocentController extends Controller
             })->get();
 
         return response()->json($docents);
+    }
+
+    private function doBasicDocentValidation(Request $request)
+    {
+        $this->validate($request, [
+            'firstname' => 'required|max:255',
+            'lastname' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:docents',
+            'academic_title' => 'required|max:50'
+        ]);
     }
 }

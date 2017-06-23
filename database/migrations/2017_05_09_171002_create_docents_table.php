@@ -19,7 +19,8 @@ class CreateDocentsTable extends Migration
             $table->string('academic_title', 50);
             $table->string('firstname',50);
             $table->string('lastname', 50);
-            $table->string('email', 256);
+            $table->string('email');
+            $table->unique('email');
             $table->timestamps();
         });
     }
