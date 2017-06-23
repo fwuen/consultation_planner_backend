@@ -80,8 +80,7 @@ class DocentMeetingController extends Controller
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
             'title' => 'required|max:50',
-            'description_public' => 'required|max:500',
-            'description_private' => 'required|max:500',
+            'description' => 'required|max:500',
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start'
         ]);
@@ -97,8 +96,7 @@ class DocentMeetingController extends Controller
         $meeting->max_participants = $request->get('max_participants');
         $meeting->email_notification_docent = $request->get('email_notification_docent');
         $meeting->title = $request->get('title');
-        $meeting->description_public = $request->get('description_public');
-        $meeting->description_private = $request->get('description_private');
+        $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
         $meeting->last_enrollment = $request->get('last_enrollment');
         $meeting->cancelled = 0;
@@ -126,8 +124,7 @@ class DocentMeetingController extends Controller
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
             'title' => 'required|max:50',
-            'description_public' => 'required|max:500',
-            'description_private' => 'required|max:500',
+            'description' => 'required|max:500',
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start',
             'count' => 'required',
@@ -154,8 +151,7 @@ class DocentMeetingController extends Controller
             $meeting->max_participants = $request->get('max_participants');
             $meeting->email_notification_docent = $request->get('email_notification_docent');
             $meeting->title = $request->get('title');
-            $meeting->description_public = $request->get('description_public');
-            $meeting->description_private = $request->get('description_private');
+            $meeting->description = $request->get('description');
             $meeting->room = $request->get('room');
             $meeting->last_enrollment = $dateTimeForMeetingLastEnrollment;
             $meeting->cancelled = 0;
@@ -187,8 +183,7 @@ class DocentMeetingController extends Controller
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
             'title' => 'required|max:50',
-            'description_public' => 'required|max:500',
-            'description_private' => 'required|max:500',
+            'description' => 'required|max:500',
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start',
             'cancelled' => 'required|max:1'
@@ -200,8 +195,7 @@ class DocentMeetingController extends Controller
         $meeting->max_participants = $request->get('max_participants');
         $meeting->email_notification_docent = $request->get('email_notification_docent');
         $meeting->title = $request->get('title');
-        $meeting->description_public = $request->get('description_public');
-        $meeting->description_private = $request->get('description_private');
+        $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
         $meeting->last_enrollment = $request->get('last_enrollment');
         $meeting->cancelled = $request->get('cancelled');

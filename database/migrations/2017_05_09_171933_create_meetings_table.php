@@ -22,8 +22,7 @@ class CreateMeetingsTable extends Migration
             $table->integer('max_participants');
             $table->boolean('email_notification_docent');
             $table->string('title', 50);
-            $table->string('description_public', 500);
-            $table->string('description_private', 500);
+            $table->string('description', 500);
             $table->string('room', 10);
             $table->dateTime('last_enrollment');
             $table->boolean('cancelled');
