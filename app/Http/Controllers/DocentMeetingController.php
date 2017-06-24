@@ -70,21 +70,6 @@ class DocentMeetingController extends Controller
         return response()->json($meetingStudentCoalitions);
     }
 
-    private function doBasicRequestValidation(Request $request)
-    {
-        $this->validate($request, [
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
-            'slots' => 'required|max:11',
-            'max_participants' => 'required|max:11',
-            'email_notification_docent' => 'required|max:1',
-            'title' => 'required|max:50',
-            'description' => 'required|max:500',
-            'room' => 'required|max:10',
-            'last_enrollment' => 'required|date|before:start'
-        ]);
-    }
-
     public function store($id, Request $request)
     {
         $this->doBasicRequestValidation($request);
@@ -94,15 +79,7 @@ class DocentMeetingController extends Controller
         $meetingSeries->save();
 
         $meeting = new Meeting;
-        $meeting->start = $request->get('start');
-        $meeting->end = $request->get('end');
-        $meeting->slots = $request->get('slots');
-        $meeting->max_participants = $request->get('max_participants');
-        $meeting->email_notification_docent = $request->get('email_notification_docent');
-        $meeting->title = $request->get('title');
-        $meeting->description = $request->get('description');
-        $meeting->room = $request->get('room');
-        $meeting->last_enrollment = $request->get('last_enrollment');
+        $this->setMeetingProperties($meeting, $request);
         $meeting->cancelled = 0;
         $meeting->meeting_series_id = $meetingSeries->id;
         $meeting->participants_count = 0;
@@ -176,16 +153,7 @@ class DocentMeetingController extends Controller
         $this->validate($request, [
             'cancelled' => 'required|max:1'
         ]);
-
-        $meeting->start = $request->get('start');
-        $meeting->end = $request->get('end');
-        $meeting->slots = $request->get('slots');
-        $meeting->max_participants = $request->get('max_participants');
-        $meeting->email_notification_docent = $request->get('email_notification_docent');
-        $meeting->title = $request->get('title');
-        $meeting->description = $request->get('description');
-        $meeting->room = $request->get('room');
-        $meeting->last_enrollment = $request->get('last_enrollment');
+        $this->setMeetingProperties($meeting, $request);
         $meeting->cancelled = $request->get('cancelled');
         $meeting->save();
 
@@ -218,5 +186,33 @@ class DocentMeetingController extends Controller
             });
         }
 
+    }
+
+    private function doBasicRequestValidation(Request $request)
+    {
+        $this->validate($request, [
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
+            'slots' => 'required|max:11',
+            'max_participants' => 'required|max:11',
+            'email_notification_docent' => 'required|max:1',
+            'title' => 'required|max:50',
+            'description' => 'required|max:500',
+            'room' => 'required|max:10',
+            'last_enrollment' => 'required|date|before:start'
+        ]);
+    }
+
+    private function setMeetingProperties(Meeting $meeting, Request $request)
+    {
+        $meeting->start = $request->get('start');
+        $meeting->end = $request->get('end');
+        $meeting->slots = $request->get('slots');
+        $meeting->max_participants = $request->get('max_participants');
+        $meeting->email_notification_docent = $request->get('email_notification_docent');
+        $meeting->title = $request->get('title');
+        $meeting->description = $request->get('description');
+        $meeting->room = $request->get('room');
+        $meeting->last_enrollment = $request->get('last_enrollment');
     }
 }

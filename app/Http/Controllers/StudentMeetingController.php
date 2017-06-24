@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 
 class StudentMeetingController extends Controller
 {
+    public function show($id, Meeting $meeting)
+    {
+        $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
+        $meeting->participations = $participations;
+        if($meeting->has_passed != 1) {
+            $meeting->checkDates();
+        }
+        return response()->json($meeting);
+    }
+
     public function index($id)
     {
         $participations = Participation::where('student_id', '=', $id)->get();
@@ -26,15 +36,5 @@ class StudentMeetingController extends Controller
         }
 
         return response()->json($meetings);
-    }
-
-    public function show($id, Meeting $meeting)
-    {
-        $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
-        $meeting->participations = $participations;
-        if($meeting->has_passed != 1) {
-            $meeting->checkDates();
-        }
-        return response()->json($meeting);
     }
 }

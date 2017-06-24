@@ -27,12 +27,7 @@ class StudentParticipationController extends Controller
         $this->doBasicParticipationValidation($request);
 
         $participation = new Participation();
-        $participation->student_id = $request->get('student_id');
-        $participation->meeting_id = $request->get('meeting_id');
-        $participation->start = $request->get('start');
-        $participation->end = $request->get('end');
-        $participation->email_notification_student = $request->get('email_notification_student');
-
+        $this->setParticipationProperties($participation, $request);
         $meeting = Meeting::findOrFail($participation->meeting_id);
 
         //hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
@@ -54,12 +49,7 @@ class StudentParticipationController extends Controller
     public function update($id, Request $request, Participation $participation)
     {
         $this->doBasicParticipationValidation($request);
-
-        $participation->student_id = $request->get('student_id');
-        $participation->meeting_id = $request->get('meeting_id');
-        $participation->start = $request->get('start');
-        $participation->end = $request->get('end');
-        $participation->email_notification_student = $request->get('email_notification_student');
+        $this->setParticipationProperties($participation, $request);
         $participation->save();
 
         $this->notifyRelevantDocent($participation->meeting_id, 'update');
@@ -136,5 +126,14 @@ class StudentParticipationController extends Controller
             'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
         ]);
+    }
+
+    private function setParticipationProperties(Participation $participation, Request $request)
+    {
+        $participation->student_id = $request->get('student_id');
+        $participation->meeting_id = $request->get('meeting_id');
+        $participation->start = $request->get('start');
+        $participation->end = $request->get('end');
+        $participation->email_notification_student = $request->get('email_notification_student');
     }
 }

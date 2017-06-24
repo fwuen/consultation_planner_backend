@@ -10,51 +10,23 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $this->doBasicStudentValidation($request);
-
-        $student = new Student;
-        $student->firstname = $request->get('firstname');
-        $student->lastname = $request->get('lastname');
-        $student->email = $request->get('email');
-        $student->save();
-
-        return redirect('student/' . $student->id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Student $student
-     * @return \Illuminate\Http\Response
-     */
     public function show(Student $student)
     {
         return response()->json($student);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Student $student
-     * @return \Illuminate\Http\Response
-     */
+    public function store(Request $request)
+    {
+        $this->doBasicStudentValidation($request);
+        $student = new Student;
+        $this->setAndSaveStudentProperties($student, $request);
+        return redirect('student/' . $student->id);
+    }
+
     public function update(Request $request, Student $student)
     {
         $this->doBasicStudentValidation($request);
-
-        $student->firstname = $request->get('firstname');
-        $student->lastname = $request->get('lastname');
-        $student->email = $request->get('email');
-        $student->save();
+        $this->setAndSaveStudentProperties($student, $request);
         return redirect('student/' . $student->id);
     }
 
@@ -65,5 +37,13 @@ class StudentController extends Controller
             'lastname' => 'required|max:255',
             'email' => 'required|email|max:255'
         ]);
+    }
+
+    private function setAndSaveStudentProperties(Student $student, Request $request)
+    {
+        $student->firstname = $request->get('firstname');
+        $student->lastname = $request->get('lastname');
+        $student->email = $request->get('email');
+        $student->save();
     }
 }
