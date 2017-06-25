@@ -163,7 +163,8 @@ class DocentMeetingController extends Controller
 
     public function cancelSeries($id, $idOfFirstMeeting)
     {
-        $meetingsInSeries = Meeting::where('meeting_series_id', '=', $idOfFirstMeeting)->get();
+        $firstMeeting = Meeting::findOrFail($idOfFirstMeeting);
+        $meetingsInSeries = Meeting::where('meeting_series_id', '=', $firstMeeting->meeting_series_id)->get();
         foreach ($meetingsInSeries as $meeting)
         {
             $meeting->cancelled = 1;
