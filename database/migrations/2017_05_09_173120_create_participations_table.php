@@ -24,6 +24,7 @@ class CreateParticipationsTable extends Migration
             $table->index('meeting_id');
             $table->dateTime('start');
             $table->dateTime('end');
+            $table->string('remark');
             $table->boolean('email_notification_student');
             $table->timestamps();
 

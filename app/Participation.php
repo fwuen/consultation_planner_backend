@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Participation extends Model
 {
-    protected $fillable = ['start', 'end', 'email_notification_student'];
+    protected $fillable = ['start', 'end', 'remark', 'email_notification_student'];
     function student()
     {
         return $this->belongsTo('Student');

@@ -162,6 +162,17 @@ class DocentMeetingController extends Controller
         return redirect('docent/' . $id . '/meeting');
     }
 
+    public function cancelSeries($id, $idOfFirstMeeting)
+    {
+        $meetingsInSeries = Meeting::where('meeting_series_id', '=', $idOfFirstMeeting)->get();
+        foreach ($meetingsInSeries as $meeting)
+        {
+            $meeting->cancelled = 1;
+            $meeting->save();
+        }
+        return redirect('docent/' . $id . '/meeting');
+    }
+
     private function notifyRelevantStudents($meetingId)
     {
         $participations = Participation::where('meeting_id', '=', $meetingId)->get();

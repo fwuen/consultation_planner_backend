@@ -134,6 +134,7 @@ class StudentParticipationController extends Controller
         $participation->meeting_id = $request->get('meeting_id');
         $participation->start = $request->get('start');
         $participation->end = $request->get('end');
+        $participation->remark = $request->get('remark');
         $participation->email_notification_student = $request->get('email_notification_student');
     }
 }

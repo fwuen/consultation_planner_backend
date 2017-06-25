@@ -29,11 +29,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents');
-Route::post('docent/{id}/meetingseries', 'DocentMeetingController@storeSeries');
 Route::resource('docent', 'DocentController');
 Route::resource('docent.meeting', 'DocentMeetingController');
 Route::resource('docent.notification', 'DocentNotificationController');
+Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents');
+Route::post('docent/{id}/meetingseries', 'DocentMeetingController@storeSeries');
+Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries');
 Route::get('docent/search/{term}', 'DocentController@search');
 
 Route::resource('student', 'StudentController');
