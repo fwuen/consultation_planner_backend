@@ -65,8 +65,6 @@ class StudentParticipationController extends Controller
             $meeting->participants_count = $meeting->participants_count - 1;
             $meeting->save();
         }
-        $meeting->participants_count = $meeting->participants_count - 1;
-        $meeting->save();
         $this->notifyRelevantDocent($participation->meeting_id, 'delete');
         $participation->delete();
         return redirect('student/' . $id . '/participation');
