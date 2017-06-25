@@ -87,6 +87,9 @@ class DocentMeetingController extends Controller
     public function store($id, Request $request)
     {
         $this->doBasicRequestValidation($request);
+        $this->validate($request, [
+            'slots' => 'required|max:11'
+        ]);
 
         $meetingSeries = new MeetingSeries;
         $meetingSeries->docent_id = $id;
@@ -94,6 +97,7 @@ class DocentMeetingController extends Controller
 
         $meeting = new Meeting;
         $this->setMeetingProperties($meeting, $request);
+        $meeting->slots = $request->slots;
         $meeting->cancelled = 0;
         $meeting->meeting_series_id = $meetingSeries->id;
         $meeting->participants_count = 0;
@@ -114,6 +118,7 @@ class DocentMeetingController extends Controller
     {
         $this->doBasicRequestValidation($request);
         $this->validate($request, [
+            'slots' => 'required|max:11',
             'count' => 'required',
             'interval' => 'required'
         ]);
@@ -220,7 +225,6 @@ class DocentMeetingController extends Controller
         $this->validate($request, [
             'start' => 'required|date',
             'end' => 'required|date|after:start',
-            'slots' => 'required|max:11',
             'max_participants' => 'required|max:11',
             'email_notification_docent' => 'required|max:1',
             'title' => 'required|max:50',
@@ -234,7 +238,6 @@ class DocentMeetingController extends Controller
     {
         $meeting->start = $request->get('start');
         $meeting->end = $request->get('end');
-        $meeting->slots = $request->get('slots');
         $meeting->max_participants = $request->get('max_participants');
         $meeting->email_notification_docent = $request->get('email_notification_docent');
         $meeting->title = $request->get('title');
