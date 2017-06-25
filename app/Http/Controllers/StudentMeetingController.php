@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Meeting;
 use App\Participation;
+use App\Slot;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,12 @@ class StudentMeetingController extends Controller
     public function show($id, Meeting $meeting)
     {
         $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
+        $slots = new Collection();
+        foreach ($participations as $participation) {
+            $slots = Slot::where('participation_id', '=', $participation->id)->get();
+        }
         $meeting->participations = $participations;
+        $meeting->slots = $slots;
         if($meeting->has_passed != 1) {
             $meeting->checkDates();
         }
@@ -27,10 +33,12 @@ class StudentMeetingController extends Controller
         foreach($participations as $participation)
         {
             $meeting = Meeting::findOrFail($participation->meeting_id);
+            $slots = Slot::where('participation_id', '=', $participation->id)->get();
             if($meeting->has_passed != 1)
             {
                 $meeting->checkDates();
             }
+            $meeting->slots = $slots;
             $meeting->participation = $participation;
             $meetings->add($meeting);
         }

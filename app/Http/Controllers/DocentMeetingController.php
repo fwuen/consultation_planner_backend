@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Participation;
+use App\Slot;
 use App\Student;
 use App\StudentNotification;
 use Illuminate\Database\Eloquent\Collection;
@@ -46,27 +47,41 @@ class DocentMeetingController extends Controller
         $students = new Collection();
         $meetingStudentCoalitions = new \Illuminate\Support\Collection();
 
+        // alle Meetings einer Serie sammeln
         foreach ($meetingSeries as $series) {
             $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
+
+            // jedes gefundene Meeting behandeln
             foreach ($meetingsInSeries as $meeting) {
-                $meeting->checkDates();
+                if ($meeting->has_passed != 1) {
+                    $meeting->checkDates();
+                }
+                // alle Participations für das gefundene Meeting holen
                 $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
-                //$meeting->participations = $participations;
+
+                // anhand der gefundenen Participations die teilnehmenden Studenten ermitteln
                 foreach ($participations as $participation) {
                     $student = Student::findOrFail($participation->student_id);
                     $student->participation = $participation;
+
+                    $slots = Slot::where('participation_id', '=', $participation->id)->where('occupied', '=', 1)->get();
+                    $student->slots = $slots;
+
                     $students->add($student);
                 }
+                // alle nicht belegten Slots behandeln
+                $slotsForMeeting = Slot::where('meeting_id', '=', $meeting->id)->where('occupied', '=', 0)->get();
+                $meeting->unoccupiedSlots = $slotsForMeeting;
+
                 $meeting->students = $students;
                 $students = new Collection();
-                //$singleCoalition = new MeetingStudentCoalition($meeting, $students, $participations);
-                //$students = new Collection();
                 $meetingStudentCoalitions->push($meeting);
+
             }
             $meetings->add($meetingsInSeries);
         }
-
         return response()->json($meetingStudentCoalitions);
+
     }
 
     public function store($id, Request $request)

@@ -16,4 +16,9 @@ class Participation extends Model
     {
         return $this->belongsTo('Meeting');
     }
+
+    function slots()
+    {
+        return $this->hasMany('Slot');
+    }
 }

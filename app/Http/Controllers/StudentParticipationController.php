@@ -46,17 +46,6 @@ class StudentParticipationController extends Controller
         return redirect('student/' . $id . '/participation');
     }
 
-    public function update($id, Request $request, Participation $participation)
-    {
-        $this->doBasicParticipationValidation($request);
-        $this->setParticipationProperties($participation, $request);
-        $participation->save();
-
-        $this->notifyRelevantDocent($participation->meeting_id, 'update');
-
-        return redirect('student/' . $id . '/participation');
-    }
-
     public function destroy($id, Participation $participation)
     {
         $meeting = Meeting::findOrFail($participation->meeting_id);
@@ -120,8 +109,6 @@ class StudentParticipationController extends Controller
         $this->validate($request,[
             'student_id' => 'required|max:10',
             'meeting_id' => 'required|max:10',
-            'start' => 'required|date',
-            'end' => 'required|date|after:start',
             'email_notification_student' => 'required'
         ]);
     }
@@ -130,8 +117,6 @@ class StudentParticipationController extends Controller
     {
         $participation->student_id = $request->get('student_id');
         $participation->meeting_id = $request->get('meeting_id');
-        $participation->start = $request->get('start');
-        $participation->end = $request->get('end');
         $participation->remark = $request->get('remark');
         $participation->email_notification_student = $request->get('email_notification_student');
     }

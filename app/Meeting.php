@@ -34,6 +34,11 @@ class Meeting extends Model
         return $this->hasMany('DocentNotification');
     }
 
+    function slots()
+    {
+        return $this->hasMany('Slot');
+    }
+
     //TODO checken, ob die überprüfung so passt
     public function checkDates() {
         $end = new \DateTime(''.$this->end, new \DateTimeZone("Europe/Berlin"));

@@ -22,8 +22,6 @@ class CreateParticipationsTable extends Migration
             $table->integer('meeting_id')->unsigned();
             $table->foreign('meeting_id')->references('id')->on('meetings')->onDelete('cascade');
             $table->index('meeting_id');
-            $table->dateTime('start');
-            $table->dateTime('end');
             $table->string('remark');
             $table->boolean('email_notification_student');
             $table->timestamps();
