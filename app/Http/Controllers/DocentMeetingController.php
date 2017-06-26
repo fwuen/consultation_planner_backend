@@ -6,6 +6,7 @@ use App\Participation;
 use App\Slot;
 use App\Student;
 use App\StudentNotification;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use App\Meeting;
 use App\MeetingSeries;
@@ -23,11 +24,13 @@ class DocentMeetingController extends Controller
 
     public function index($id)
     {
+        $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $timeForComparison->modify('-14 day');
         $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
         $meetings = new Collection();
 
         foreach ($meetingSeries as $series) {
-            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
+            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))->get();
             foreach ($meetingsInSeries as $meeting) {
                 if($meeting->has_passed != 1) {
                     $meeting->checkDates();
@@ -42,6 +45,8 @@ class DocentMeetingController extends Controller
 
     public function indexWithStudents($id)
     {
+        $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $timeForComparison->modify('-14 day');
         $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
         $meetings = new Collection();
         $students = new Collection();
@@ -49,7 +54,7 @@ class DocentMeetingController extends Controller
 
         // alle Meetings einer Serie sammeln
         foreach ($meetingSeries as $series) {
-            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->get();
+            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))->get();
 
             // jedes gefundene Meeting behandeln
             foreach ($meetingsInSeries as $meeting) {
