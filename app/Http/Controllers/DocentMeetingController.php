@@ -91,36 +91,43 @@ class DocentMeetingController extends Controller
 
     public function store($id, Request $request)
     {
-        $this->doBasicRequestValidation($request);
         $this->validate($request, [
-            'slots' => 'required|max:11'
+            'is_series' => 'required|max:1'
         ]);
-
-        $meetingSeries = new MeetingSeries;
-        $meetingSeries->docent_id = $id;
-        $meetingSeries->save();
-
-        $meeting = new Meeting;
-        $this->setMeetingProperties($meeting, $request);
-        $meeting->slots = $request->slots;
-        $meeting->cancelled = 0;
-        $meeting->meeting_series_id = $meetingSeries->id;
-        $meeting->participants_count = 0;
-        $meeting->has_passed = 0;
-
-        //TODO das hier ist ungetestet!!!!!!!
-        if ($meeting->slots != 1 && $meeting->max_participants != 1) {
-            $meetingSeries->delete();
-            return redirect('docent/' . $id . '/meeting');
+        if($request->is_series == 1) {
+            return $this->storeSeries($id, $request);
         }
-        $meeting->save();
+        else {
+            $this->doBasicRequestValidation($request);
+            $this->validate($request, [
+                'slots' => 'required|max:11'
+            ]);
 
-        $this->saveSlotsForMeeting($meeting, $request);
+            $meetingSeries = new MeetingSeries;
+            $meetingSeries->docent_id = $id;
+            $meetingSeries->save();
 
+            $meeting = new Meeting;
+            $this->setMeetingProperties($meeting, $request);
+            $meeting->slots = $request->slots;
+            $meeting->cancelled = 0;
+            $meeting->meeting_series_id = $meetingSeries->id;
+            $meeting->participants_count = 0;
+            $meeting->has_passed = 0;
+
+            //TODO das hier ist ungetestet!!!!!!!
+            if ($meeting->slots != 1 && $meeting->max_participants != 1) {
+                $meetingSeries->delete();
+                return redirect('docent/' . $id . '/meeting');
+            }
+            $meeting->save();
+
+            $this->saveSlotsForMeeting($meeting, $request);
+        }
         return redirect('docent/' . $id . '/meeting');
     }
 
-    public function storeSeries($id, Request $request)
+    private function storeSeries($id, Request $request)
     {
         $this->doBasicRequestValidation($request);
         $this->validate($request, [
