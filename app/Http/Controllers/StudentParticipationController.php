@@ -7,6 +7,7 @@ use App\DocentNotification;
 use App\Meeting;
 use App\MeetingSeries;
 use App\Participation;
+use App\Slot;
 use Illuminate\Http\Request;
 
 class StudentParticipationController extends Controller
@@ -27,7 +28,7 @@ class StudentParticipationController extends Controller
         $this->doBasicParticipationValidation($request);
 
         $participation = new Participation();
-        $this->setParticipationProperties($participation, $request);
+        $this->setParticipationProperties($participation, $request, $id);
         $meeting = Meeting::findOrFail($participation->meeting_id);
 
         //hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
@@ -40,6 +41,18 @@ class StudentParticipationController extends Controller
             }
         } else if($meeting->slots > 1) {
             $participation->save();
+        }
+
+        $slots = Slot::whereIn('id', $request->slot_list)->get();
+        foreach ($slots as $slot) {
+            if ($slot->occupied == 1) {
+                return redirect('student/' . $id . '/participation');
+            }
+        }
+        foreach ($slots as $slot) {
+            $slot->participation_id = $participation->id;
+            $slot->occupied = 1;
+            $slot->save();
         }
 
         $this->notifyRelevantDocent($participation->meeting_id, 'store');
@@ -107,17 +120,19 @@ class StudentParticipationController extends Controller
     private function doBasicParticipationValidation(Request $request)
     {
         $this->validate($request,[
-            'student_id' => 'required|max:10',
             'meeting_id' => 'required|max:10',
             'email_notification_student' => 'required'
         ]);
     }
 
-    private function setParticipationProperties(Participation $participation, Request $request)
+    private function setParticipationProperties(Participation $participation, Request $request, $id)
     {
-        $participation->student_id = $request->get('student_id');
+        $participation->student_id = $id;
         $participation->meeting_id = $request->get('meeting_id');
         $participation->remark = $request->get('remark');
         $participation->email_notification_student = $request->get('email_notification_student');
+
     }
+
+
 }

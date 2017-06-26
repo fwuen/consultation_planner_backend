@@ -6,6 +6,7 @@ use App\Participation;
 use App\Slot;
 use App\Student;
 use App\StudentNotification;
+use DateInterval;
 use Illuminate\Database\Eloquent\Collection;
 use App\Meeting;
 use App\MeetingSeries;
@@ -103,13 +104,14 @@ class DocentMeetingController extends Controller
         $meeting->participants_count = 0;
         $meeting->has_passed = 0;
 
-        //TODO das hier ist ungetestet!
-        if ($meeting->slots != 1 && $meeting->max_participations != 1) {
+        //TODO das hier ist ungetestet!!!!!!!
+        if ($meeting->slots != 1 && $meeting->max_participants != 1) {
             $meetingSeries->delete();
             return redirect('docent/' . $id . '/meeting');
         }
-
         $meeting->save();
+
+        $this->saveSlotsForMeeting($meeting, $request);
 
         return redirect('docent/' . $id . '/meeting');
     }
@@ -152,11 +154,13 @@ class DocentMeetingController extends Controller
             $meeting->has_passed = 0;
 
             //TODO das hier ist ungetestet!
-            if ($meeting->slots != 1 && $meeting->max_participations != 1) {
+            if ($meeting->slots != 1 && $meeting->max_participants != 1) {
                 $meetingSeries->delete();
                 return redirect('docent/' . $id . '/meeting');
             }
             $meeting->save();
+
+            $this->saveSlotsForMeeting($meeting, $request);
 
             $dateTimeForMeetingStart->modify('+' . $interval . 'day');
             $dateTimeForMeetingEnd->modify('+' . $interval . 'day');
@@ -244,5 +248,38 @@ class DocentMeetingController extends Controller
         $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
         $meeting->last_enrollment = $request->get('last_enrollment');
+    }
+
+    private function saveSlotsForMeeting(Meeting $meeting, Request $request)
+    {
+        $start_time = new  \DateTime($request->start);
+        $end_time = new \DateTime($request->end);
+
+        $diff = $end_time->getTimestamp() - $start_time->getTimestamp();
+        $mins = $diff/60;
+
+        $slot_interval = floor($mins/$request->slots);
+
+        // Zeit, mit der überprüft wird, ob beim aktuellen Meeting bis zum Ende aufgefüllt werden muss
+        $check_time = clone $start_time;
+
+        // Zeit, die genutzt wird, um die Endzeit des Meetings festzulegen, wenn nicht aufgefüllt werden muss
+        $add_time = clone $start_time;
+        for($i = 0; $i < $request->slots; $i++) {
+            $slot = new Slot;
+            $slot->meeting_id = $meeting->id;
+            $slot->occupied = 0;
+            $slot->start = $start_time;
+            $check_time->add(new DateInterval("PT" . ($slot_interval*2) . "M"));
+            if ($check_time > $end_time) {
+                $slot->end = $end_time;
+            } else {
+                $slot->end = $add_time->add(new DateInterval("PT" . $slot_interval . "M"));;
+            }
+            $slot->save();
+            $start_time->add(new DateInterval("PT" . $slot_interval . "M"));
+            // check_time auf den nächsten Wert von start_time setzen, dass von ihm aus überprüft werden kann
+            $check_time = clone $start_time;
+        }
     }
 }
