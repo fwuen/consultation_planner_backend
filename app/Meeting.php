@@ -43,6 +43,8 @@ class Meeting extends Model
     public function checkDates() {
         $end = new \DateTime(''.$this->end, new \DateTimeZone("Europe/Berlin"));
         $now = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $end->format('Y-m-d H:i:s');
+        $now->format('Y-m-d H:i:s');
         if($end < $now) {
             $this->has_passed = 1;
             $this->save();

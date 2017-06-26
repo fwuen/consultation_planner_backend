@@ -135,8 +135,10 @@ class StudentParticipationController extends Controller
 
     private function setParticipationProperties(Participation $participation, Request $request, $id)
     {
-        $participation->start = $request->get('start');
-        $participation->end = $request->get('end');
+        $dateTimeForStart = new \DateTime($request->get('start'), new \DateTimeZone("Europe/Berlin"));
+        $dateTimeForEnd = new \DateTime($request->get('end'), new \DateTimeZone("Europe/Berlin"));
+        $participation->start = $dateTimeForStart->format('Y-m-d H:i:s');
+        $participation->end = $dateTimeForEnd->format('Y-m-d H:i:s');
         $participation->student_id = $request->get('student_id');
         $participation->meeting_id = $request->get('meeting_id');
         $participation->remark = $request->get('remark');

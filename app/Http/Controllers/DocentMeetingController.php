@@ -25,6 +25,7 @@ class DocentMeetingController extends Controller
     public function index($id)
     {
         $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $timeForComparison->format('Y-m-d H:i:s');
         $timeForComparison->modify('-14 day');
         $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
         $meetings = new Collection();
@@ -78,7 +79,7 @@ class DocentMeetingController extends Controller
                 $slotsForMeeting = Slot::where('meeting_id', '=', $meeting->id)->where('occupied', '=', 0)->get();
                 $meeting->unoccupiedSlots = $slotsForMeeting;
 
-                $meeting->students = $students;
+                $meeting->participating_students = $students;
                 $students = new Collection();
                 $meetingStudentCoalitions->push($meeting);
 
@@ -144,8 +145,11 @@ class DocentMeetingController extends Controller
         $meetingSeries->save();
 
         $dateTimeForMeetingStart = new \DateTime($request->get('start'));
+        $dateTimeForMeetingStart->format('Y-m-d H:i:s');
         $dateTimeForMeetingEnd = new \DateTime($request->get('end'));
+        $dateTimeForMeetingEnd->format('Y-m-d H:i:s');
         $dateTimeForMeetingLastEnrollment = new \DateTime($request->get('last_enrollment'));
+        $dateTimeForMeetingLastEnrollment->format('Y-m-d H:i:s');
 
         for ($i = 0; $i < $numberOfMeetings; ++$i) {
 
@@ -251,20 +255,25 @@ class DocentMeetingController extends Controller
 
     private function setMeetingProperties(Meeting $meeting, Request $request)
     {
-        $meeting->start = $request->get('start');
-        $meeting->end = $request->get('end');
+        $dateTimeForStart = new \DateTime($request->get('start'), new \DateTimeZone("Europe/Berlin"));
+        $dateTimeForEnd = new \DateTime($request->get('end'), new \DateTimeZone("Europe/Berlin"));
+        $dateTimeForLastEnrollment = new \DateTime($request->get('last_enrollment'), new \DateTimeZone("Europe/Berlin"));
+        $meeting->start = $dateTimeForStart->format('Y-m-d H:i:s');
+        $meeting->end = $dateTimeForEnd->format('Y-m-d H:i:s');
         $meeting->max_participants = $request->get('max_participants');
         $meeting->email_notification_docent = $request->get('email_notification_docent');
         $meeting->title = $request->get('title');
         $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
-        $meeting->last_enrollment = $request->get('last_enrollment');
+        $meeting->last_enrollment = $dateTimeForLastEnrollment->format('Y-m-d H:i:s');
     }
 
     private function saveSlotsForMeeting(Meeting $meeting, Request $request)
     {
         $start_time = new  \DateTime($request->start);
         $end_time = new \DateTime($request->end);
+        $start_time->format('Y-m-d H:i:s');
+        $end_time->format('Y-m-d H:i:s');
 
         $diff = $end_time->getTimestamp() - $start_time->getTimestamp();
         $mins = $diff/60;
