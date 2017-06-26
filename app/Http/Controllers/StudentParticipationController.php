@@ -67,6 +67,11 @@ class StudentParticipationController extends Controller
             $meeting->participants_count = $meeting->participants_count - 1;
             $meeting->save();
         }
+        $slots = Slot::where('participation_id', '=', $participation->id)->get();
+        foreach ($slots as $slot) {
+            $slot->participation_id = null;
+            $slot->occupied = 0;
+        }
         $this->notifyRelevantDocent($participation->meeting_id, 'delete');
         $participation->delete();
         return redirect('student/' . $id . '/participation');
@@ -120,6 +125,9 @@ class StudentParticipationController extends Controller
     private function doBasicParticipationValidation(Request $request)
     {
         $this->validate($request,[
+            'start' => 'required|date',
+            'end' => 'required|date|after:start',
+            'student_id' => 'required|max:10',
             'meeting_id' => 'required|max:10',
             'email_notification_student' => 'required'
         ]);
@@ -127,7 +135,9 @@ class StudentParticipationController extends Controller
 
     private function setParticipationProperties(Participation $participation, Request $request, $id)
     {
-        $participation->student_id = $id;
+        $participation->start = $request->get('start');
+        $participation->end = $request->get('end');
+        $participation->student_id = $request->get('student_id');
         $participation->meeting_id = $request->get('meeting_id');
         $participation->remark = $request->get('remark');
         $participation->email_notification_student = $request->get('email_notification_student');

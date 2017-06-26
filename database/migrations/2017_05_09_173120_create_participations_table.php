@@ -16,6 +16,8 @@ class CreateParticipationsTable extends Migration
         \Schema::create('participations', function (Blueprint $table) {
 
             $table->increments('id');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->integer('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->index('student_id');

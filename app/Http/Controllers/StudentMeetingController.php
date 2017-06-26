@@ -27,7 +27,9 @@ class StudentMeetingController extends Controller
 
     public function index($id)
     {
-        $participations = Participation::where('student_id', '=', $id)->get();
+        $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $timeForComparison->modify('-14 day');
+        $participations = Participation::where('student_id', '=', $id)->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))->get();
         $meetings = new Collection();
 
         foreach($participations as $participation)
