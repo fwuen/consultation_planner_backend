@@ -252,7 +252,6 @@ class DocentMeetingController extends Controller
 
     private function doBasicRequestValidation(Request $request)
     {
-        /*
         $this->validate($request, [
             'start' => 'required|date',
             'end' => 'required|date|after:start',
@@ -262,7 +261,7 @@ class DocentMeetingController extends Controller
             'description' => 'required|max:500',
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start'
-        ]);*/
+        ]);
     }
 
     private function setMeetingProperties(Meeting $meeting, Request $request)
@@ -290,6 +289,8 @@ class DocentMeetingController extends Controller
     {
         $start_time = new  \DateTime($request->start);
         $end_time = new \DateTime($request->end);
+        $start_time->setTimezone(new \DateTimeZone('Europe/Beriln'));
+        $end_time->setTimeZone(new \DateTimeZone('Europe/Berlin'));
         $start_time->format('Y-m-d H:i:s');
         $end_time->format('Y-m-d H:i:s');
 
