@@ -252,7 +252,6 @@ class DocentMeetingController extends Controller
 
     private function doBasicRequestValidation(Request $request)
     {
-        /*
         $this->validate($request, [
             'start' => 'required|date',
             'end' => 'required|date|after:start',
@@ -262,7 +261,7 @@ class DocentMeetingController extends Controller
             'description' => 'required|max:500',
             'room' => 'required|max:10',
             'last_enrollment' => 'required|date|before:start'
-        ]);*/
+        ]);
     }
 
     private function setMeetingProperties(Meeting $meeting, Request $request)
