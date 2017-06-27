@@ -198,7 +198,11 @@ class DocentMeetingController extends Controller
         $this->validate($request, [
             'cancelled' => 'required|max:1'
         ]);
-        $this->setMeetingProperties($meeting, $request);
+        $meeting->max_participants = $request->get('max_participants');
+        $meeting->email_notification_docent = $request->get('email_notification_docent');
+        $meeting->title = $request->get('title');
+        $meeting->description = $request->get('description');
+        $meeting->room = $request->get('room');
         $meeting->cancelled = $request->get('cancelled');
         $meeting->save();
 
