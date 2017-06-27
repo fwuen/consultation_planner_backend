@@ -289,8 +289,6 @@ class DocentMeetingController extends Controller
     {
         $start_time = new  \DateTime($request->start);
         $end_time = new \DateTime($request->end);
-        $start_time->setTimezone(new \DateTimeZone('Europe/Beriln'));
-        $end_time->setTimeZone(new \DateTimeZone('Europe/Berlin'));
         $start_time->format('Y-m-d H:i:s');
         $end_time->format('Y-m-d H:i:s');
 
