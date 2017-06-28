@@ -124,13 +124,12 @@ class DocentMeetingController extends Controller
             //TODO das hier ist ungetestet!!!!!!!
             if ($meeting->slots != 1 && $meeting->max_participants != 1) {
                 $meetingSeries->delete();
-                return redirect('docent/' . $id . '/meeting');
+                return;
             }
             $meeting->save();
 
             $this->saveSlotsForMeeting($meeting, $request);
         }
-        return redirect('docent/' . $id . '/meeting');
     }
 
     private function storeSeries($id, Request $request)
@@ -179,7 +178,7 @@ class DocentMeetingController extends Controller
             //TODO das hier ist ungetestet!
             if ($meeting->slots != 1 && $meeting->max_participants != 1) {
                 $meetingSeries->delete();
-                return redirect('docent/' . $id . '/meeting');
+                return;
             }
             $meeting->save();
 
@@ -189,8 +188,6 @@ class DocentMeetingController extends Controller
             $dateTimeForMeetingEnd->modify('+' . $interval . 'day');
             $dateTimeForMeetingLastEnrollment->modify('+' . $interval . 'day');
         }
-
-        return redirect('docent/' . $id . '/meeting');
     }
 
     public function update($id, Request $request, Meeting $meeting)
@@ -210,8 +207,6 @@ class DocentMeetingController extends Controller
         $meeting->save();
 
         $this->notifyRelevantStudents($id, $meeting);
-
-        return redirect()->to('/docent/' . $id . '/meeting');
     }
 
     public function cancelSeries($id, $idOfFirstMeeting)
@@ -224,7 +219,6 @@ class DocentMeetingController extends Controller
             $meeting->save();
             $this->notifyRelevantStudents($id, $meeting);
         }
-        return redirect('docent/' . $id . '/meeting');
     }
 
     private function notifyRelevantStudents($docentId, $meeting)
