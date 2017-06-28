@@ -55,7 +55,7 @@ class StudentParticipationController extends Controller
             $slot->save();
         }
 
-        $this->notifyRelevantDocent($participation->meeting_id, 'store');
+        $this->notifyRelevantDocent($participation, 'store');
         return redirect('student/' . $id . '/participation');
     }
 
@@ -77,9 +77,9 @@ class StudentParticipationController extends Controller
         return redirect('student/' . $id . '/participation');
     }
 
-    private function notifyRelevantDocent($meetingId, $typeOfNotification)
+    private function notifyRelevantDocent(Participation $participation, $typeOfNotification)
     {
-        $meeting = Meeting::findOrFail($meetingId);
+        $meeting = Meeting::findOrFail($participation->meeting_id);
         $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
         $docent = Docent::findOrFail($meetingSeries->docent_id);
 
@@ -96,25 +96,30 @@ class StudentParticipationController extends Controller
                 break;
         }
         $docentNotification->docent_id = $docent->id;
-        $docentNotification->meeting_id = $meetingId;
+        $docentNotification->meeting_id = $meeting->id;
         $docentNotification->seen = 0;
         $docentNotification->save();
 
         if($meeting->email_notification_docent == 1)
         {
+            $data = [
+                'meetingTitle' => $meeting->title,
+                'partStart' => $participation->start,
+                'partRemark' => $participation->remark
+            ];
             switch($typeOfNotification) {
                 case 'store':
-                    \Mail::send('notify.meeting.newparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('notify.meeting.newparticipation', $data, function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Neue Anmeldung zu Ihrer Sprechstunde');
                     });
                     break;
                 case 'update':
-                    \Mail::send('notify.meeting.updateparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('notify.meeting.updateparticipation', $data, function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Geänderte Anmeldung zu Ihrer Sprechstunde');
                     });
                     break;
                 case 'delete':
-                    \Mail::send('notify.meeting.deleteparticipation', ['docent' => $docent], function ($m) use ($docent) {
+                    \Mail::send('notify.meeting.deleteparticipation', $data, function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Abmeldung von Ihrer Sprechstunde');
                     });
                     break;

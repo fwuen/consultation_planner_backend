@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Docent;
 use App\Participation;
 use App\Slot;
 use App\Student;
@@ -196,19 +197,21 @@ class DocentMeetingController extends Controller
     {
         $this->doBasicRequestValidation($request);
         $this->validate($request, [
-            'cancelled' => 'required|max:1'
+            'cancelled' => 'max:1'
         ]);
         $meeting->max_participants = $request->get('max_participants');
         $meeting->email_notification_docent = $request->get('email_notification_docent');
         $meeting->title = $request->get('title');
         $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
-        $meeting->cancelled = $request->get('cancelled');
+        if($request->get('cancelled') != null) {
+            $meeting->cancelled = $request->get('cancelled');
+        }
         $meeting->save();
 
-        $this->notifyRelevantStudents($meeting->id);
+        $this->notifyRelevantStudents($id, $meeting);
 
-        return redirect('docent/' . $id . '/meeting');
+        return redirect()->to('/docent/' . $id . '/meeting');
     }
 
     public function cancelSeries($id, $idOfFirstMeeting)
@@ -224,9 +227,10 @@ class DocentMeetingController extends Controller
         return redirect('docent/' . $id . '/meeting');
     }
 
-    private function notifyRelevantStudents($meetingId)
+    private function notifyRelevantStudents($docentId, $meeting)
     {
-        $participations = Participation::where('meeting_id', '=', $meetingId)->get();
+        $docent = Docent::findOrFail($docentId);
+        $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
 
         $students = new Collection();
         foreach ($participations as $participation) {
@@ -242,8 +246,13 @@ class DocentMeetingController extends Controller
             $studentNotification->save();
         }
 
+        $content = [
+            'meetingTitle' => $meeting->title,
+            'docentName' => $docent->firstname . ' ' . $docent->lastname
+            ];
         foreach ($students as $student) {
-            \Mail::send('notify.meeting.update', ['student' => $student], function ($m) use ($student) {
+
+            \Mail::send('notify.meeting.update', $content, function ($m) use ($student) {
                 $m->to($student->email)->subject('Aktualisierung einer Sprechstunde');
             });
         }
