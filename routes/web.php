@@ -34,6 +34,7 @@ Route::post('/login', "UserController@login");
 Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents')->middleware('auth.token');
 Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries')->middleware('auth.token');
 Route::get('docent/search/{term}', 'DocentController@search')->middleware('auth.token');
+
 Route::resource('docent', 'DocentController')->middleware('auth.token');
 Route::resource('docent.meeting', 'DocentMeetingController')->middleware('auth.token');
 Route::resource('docent.notification', 'DocentNotificationController')->middleware('auth.token');
