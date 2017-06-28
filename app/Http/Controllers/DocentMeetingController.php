@@ -222,7 +222,7 @@ class DocentMeetingController extends Controller
         {
             $meeting->cancelled = 1;
             $meeting->save();
-            $this->notifyRelevantStudents($meeting->id);
+            $this->notifyRelevantStudents($id, $meeting);
         }
         return redirect('docent/' . $id . '/meeting');
     }

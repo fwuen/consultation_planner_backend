@@ -72,7 +72,7 @@ class StudentParticipationController extends Controller
             $slot->participation_id = null;
             $slot->occupied = 0;
         }
-        $this->notifyRelevantDocent($participation->meeting_id, 'delete');
+        $this->notifyRelevantDocent($participation, 'delete');
         $participation->delete();
         return redirect('student/' . $id . '/participation');
     }
