@@ -12,6 +12,12 @@ class DocentController extends Controller
         return response()->json($docent);
     }
 
+    public function index()
+    {
+        $docents = Docent::all();
+        return response()->json($docents);
+    }
+
     public function store(Request $request)
     {
         $this->doBasicDocentValidation($request);
