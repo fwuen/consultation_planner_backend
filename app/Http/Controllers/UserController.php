@@ -18,42 +18,28 @@ class UserController extends Controller
      */
     public function login(Request $request)
     {
-        // request to api
         $username = $request->get('username');
         $password = $request->get('password');
 
-        $url = 'http://localhost:69/authenticate';
-        $data = array('username' => $username, 'password' => $password);
+        // request to api
+        $result = $this->sendRequest($username, $password);
 
-        // use key 'http' even if you send the request to https://...
-        $options = array(
-            'http' => array(
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method' => 'POST',
-                'content' => http_build_query($data)
-            )
-        );
-        try {
-            $context = stream_context_create($options);
-            $result = file_get_contents($url, false, $context);
-            if ($result == 'Password wrong') {
-                return response('No authorization', 401);
-            }
-        } catch (Exception $exception) {
+        if ($result == null) {
             return response('No authorization', 401);
         }
-
+        // extract data
         $data = json_decode($result, true);
         $first_name = $data['firstname'];
         $last_name = $data['lastname'];
         $email = $data['email'];
         $role = $data['role'];
 
-        $token = $this->generateRandomString();
-        //Überprüfen ob es schon einen eintag in der Usertabelle gibt
-        $users = User::where('email', '=', $email)->get();
         $url = null;
         $id = null;
+
+        $token = $this->generateRandomString();
+        //Überprüfen ob es schon einen Eintrag in der Usertabelle gibt
+        $users = User::where('email', '=', $email)->get();
         if ($users->contains('email', $email)) {
             $id = $role == 'student' ? $this->getStudentID($email) : $this->getDocentID($email);
             if ($role == 'student') {
@@ -65,40 +51,20 @@ class UserController extends Controller
             }
             \DB::table('users')->where('email', $email)->update(['updated_at' => date('Y-m-d G:i:s')]);
         } else {
+            //neuen Eintrag anlegen
             if ($role == 'student') {
-                $student = new Student();
-                $student->firstname = $first_name;
-                $student->lastname = $last_name;
-                $student->email = $email;
-                $student->save();
-
+                $this->createStudent($first_name, $last_name, $email);
                 $student_id = $this->getStudentID($email);
-                // ggf anlegen
                 $token .= 's' . $student_id;
-
-                $user = new User();
-                $user->email = $email;
-                $user->token = $token;
-                $user->save();
+                $this->createUser($email, $token);
             } else {
-                $docent = new Docent();
-                $docent->firstname = $first_name;
-                $docent->lastname = $last_name;
-                $docent->email = $email;
-                $docent->save();
-
+                $this->createDocent($first_name, $last_name, $email);
                 $docent_id = $this->getDocentID($email);
-                // ggf anlegen
                 $token .= 'd' . $docent_id;
-
-                $user = new User();
-                $user->email = $email;
-                $user->token = $token;
-                $user->save();
+                $this->createUser($email, $token);
             }
         }
         // entscheiden auf welche uri geleitet werden muss ($role)
-        $id = null;
         if ($role == 'student') {
             $id = $this->getStudentID($email);
             if ($id == null) {
@@ -119,6 +85,78 @@ class UserController extends Controller
     }
 
     /**
+     * @param $email
+     * @param $token
+     */
+    public function createUser($email, $token)
+    {
+        $user = new User();
+        $user->email = $email;
+        $user->token = $token;
+        $user->save();
+    }
+
+    /**
+     * @param $first_name
+     * @param $last_name
+     * @param $email
+     */
+    public function createStudent($first_name, $last_name, $email)
+    {
+        $student = new Student();
+        $student->firstname = $first_name;
+        $student->lastname = $last_name;
+        $student->email = $email;
+        $student->save();
+    }
+
+    /**
+     * @param $first_name
+     * @param $last_name
+     * @param $email
+     */
+    public function createDocent($first_name, $last_name, $email)
+    {
+        $docent = new Docent();
+        $docent->firstname = $first_name;
+        $docent->lastname = $last_name;
+        $docent->email = $email;
+        $docent->save();
+    }
+
+
+    /**
+     * @param $username
+     * @param $password
+     * @return bool|null|string
+     */
+    public function sendRequest($username, $password)
+    {
+        $url = 'http://localhost:69/authenticate';
+        $data = array('username' => $username, 'password' => $password);
+
+        // use key 'http' even if you send the request to https://...
+        $options = array(
+            'http' => array(
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            )
+        );
+        try {
+            $context = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            if ($result == 'Password wrong') {
+                return null;
+            }
+        } catch (Exception $exception) {
+            return null;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param String $email
      * @return null
      */
@@ -136,6 +174,10 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @param $email
+     * @return null
+     */
     public function getDocentID($email)
     {
         try {

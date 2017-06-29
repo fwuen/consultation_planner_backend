@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class DocentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.token');
+    }
+
     public function show(Docent $docent)
     {
         return response()->json($docent);

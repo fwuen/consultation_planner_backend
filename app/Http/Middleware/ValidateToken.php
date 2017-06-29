@@ -19,6 +19,7 @@ class ValidateToken
         $value = $request->header('Authorization');
         $user_id = substr($value, 51);
         $role = substr($value, 50, 1);
+
         $users = \DB::table('users')->where('id', $user_id)->get();
         $email = null;
         if ($users->isEmpty()) {
