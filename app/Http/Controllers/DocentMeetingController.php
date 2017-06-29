@@ -15,6 +15,12 @@ use Illuminate\Http\Request;
 
 class DocentMeetingController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.token');
+        $this->middleware('auth.route.docent', ['only' => ['store', 'storeSeries', 'update', 'cancelSeries']]);
+    }
+
     public function show($id, Meeting $meeting)
     {
         if ($meeting->has_passed != 1) {
@@ -36,7 +42,7 @@ class DocentMeetingController extends Controller
                 ->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))
                 ->get();
             foreach ($meetingsInSeries as $meeting) {
-                if($meeting->has_passed != 1) {
+                if ($meeting->has_passed != 1) {
                     $meeting->checkDates();
                 }
 
@@ -100,10 +106,9 @@ class DocentMeetingController extends Controller
         $this->validate($request, [
             'is_series' => 'required|max:1'
         ]);
-        if($request->is_series == 1) {
+        if ($request->is_series == 1) {
             return $this->storeSeries($id, $request);
-        }
-        else {
+        } else {
             $this->doBasicRequestValidation($request);
             $this->validate($request, [
                 'slots' => 'required|max:11'
@@ -201,7 +206,7 @@ class DocentMeetingController extends Controller
         $meeting->title = $request->get('title');
         $meeting->description = $request->get('description');
         $meeting->room = $request->get('room');
-        if($request->get('cancelled') != null) {
+        if ($request->get('cancelled') != null) {
             $meeting->cancelled = $request->get('cancelled');
         }
         $meeting->save();
@@ -213,8 +218,7 @@ class DocentMeetingController extends Controller
     {
         $firstMeeting = Meeting::findOrFail($idOfFirstMeeting);
         $meetingsInSeries = Meeting::where('meeting_series_id', '=', $firstMeeting->meeting_series_id)->get();
-        foreach ($meetingsInSeries as $meeting)
-        {
+        foreach ($meetingsInSeries as $meeting) {
             $meeting->cancelled = 1;
             $meeting->save();
             $this->notifyRelevantStudents($id, $meeting);
@@ -243,7 +247,7 @@ class DocentMeetingController extends Controller
         $content = [
             'meetingTitle' => $meeting->title,
             'docentName' => $docent->firstname . ' ' . $docent->lastname
-            ];
+        ];
         foreach ($students as $student) {
 
             \Mail::send('notify.meeting.update', $content, function ($m) use ($student) {
@@ -298,21 +302,21 @@ class DocentMeetingController extends Controller
         $end_time->setTimezone(new \DateTimeZone('Europe/Berlin'));
 
         $diff = $end_time->getTimestamp() - $start_time->getTimestamp();
-        $mins = $diff/60;
+        $mins = $diff / 60;
 
-        $slot_interval = floor($mins/$request->slots);
+        $slot_interval = floor($mins / $request->slots);
 
         // Zeit, mit der überprüft wird, ob beim aktuellen Meeting bis zum Ende aufgefüllt werden muss
         $check_time = clone $start_time;
 
         // Zeit, die genutzt wird, um die Endzeit des Meetings festzulegen, wenn nicht aufgefüllt werden muss
         $add_time = clone $start_time;
-        for($i = 0; $i < $request->slots; $i++) {
+        for ($i = 0; $i < $request->slots; $i++) {
             $slot = new Slot;
             $slot->meeting_id = $meeting->id;
             $slot->occupied = 0;
             $slot->start = $start_time;
-            $check_time->add(new DateInterval("PT" . ($slot_interval*2) . "M"));
+            $check_time->add(new DateInterval("PT" . ($slot_interval * 2) . "M"));
             if ($check_time > $end_time) {
                 $slot->end = $end_time;
             } else {

@@ -10,6 +10,7 @@ class DocentController extends Controller
     public function __construct()
     {
         $this->middleware('auth.token');
+        $this->middleware('auth.route.docent', ['only' => ['store', 'update']]);
     }
 
     public function show(Docent $docent)
@@ -22,14 +23,14 @@ class DocentController extends Controller
         $this->doBasicDocentValidation($request);
         $docent = new Docent;
         $this->setAndSaveDocentProperties($docent, $request);
-        return redirect('docent/' . $docent->id);
+        return redirect('docent / ' . $docent->id);
     }
 
     public function update(Request $request, Docent $docent)
     {
         $this->doBasicDocentValidation($request);
         $this->setAndSaveDocentProperties($docent, $request);
-        return redirect('docent/' . $docent->id);
+        return redirect('docent / ' . $docent->id);
     }
 
     public function search($term)
@@ -39,8 +40,8 @@ class DocentController extends Controller
         $docents = \DB::table('docents')
             ->where(function ($query) use ($termArray) {
                 foreach ($termArray as $value) {
-                    $query->orWhere('lastname', 'like', '%' . $value . '%');
-                    $query->orWhere('firstname', 'like', '%' . $value . '%');
+                    $query->orWhere('lastname', 'like', ' % ' . $value . ' % ');
+                    $query->orWhere('firstname', 'like', ' % ' . $value . ' % ');
                 }
             })->get();
 
@@ -50,10 +51,10 @@ class DocentController extends Controller
     private function doBasicDocentValidation(Request $request)
     {
         $this->validate($request, [
-            'firstname' => 'required|max:255',
-            'lastname' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:docents',
-            'academic_title' => 'required|max:50'
+            'firstname' => 'required | max:255',
+            'lastname' => 'required | max:255',
+            'email' => 'required | email | max:255 | unique:docents',
+            'academic_title' => 'required | max:50'
         ]);
     }
 

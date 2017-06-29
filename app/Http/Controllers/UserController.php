@@ -11,8 +11,17 @@ use Mockery\Exception;
 
 class UserController extends Controller
 {
+    /**
+     * @param Request $request
+     */
+    public function logout(Request $request)
+    {
+        $token = $request->header('Authorization');
+        \DB::table('users')->where('token', $token)->update(['token' => "logged out"]);
+    }
 
     /**
+     *
      * @param Request $request
      * @return null | Redirector
      */

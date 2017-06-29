@@ -27,23 +27,24 @@
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('auth.token');
+})/*->middleware('auth.token')*/
+;
 
+Route::post('/logout', "UserController@logout")->middleware('auth.token');
 Route::post('/login', "UserController@login");
 
-Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents')->middleware('auth.token');
-Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries')->middleware('auth.token');
-Route::get('docent/search/{term}', 'DocentController@search')->middleware('auth.token');
+Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents')/*->middleware('auth.token')*/
+;
+Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries')/*->middleware('auth.token')*/
+;
+Route::get('docent/search/{term}', 'DocentController@search')/*->middleware('auth.token')*/
+;
 
-Route::resource('docent', 'DocentController')->middleware('auth.token');
-Route::resource('docent.meeting', 'DocentMeetingController')->middleware('auth.token');
-Route::resource('docent.notification', 'DocentNotificationController')->middleware('auth.token');
+Route::resource('docent', 'DocentController');
+Route::resource('docent.meeting', 'DocentMeetingController');
+Route::resource('docent.notification', 'DocentNotificationController');
 
-
-
-
-
-Route::resource('student', 'StudentController')->middleware('auth.token');
-Route::resource('student.participation', 'StudentParticipationController')->middleware('auth.token');
-Route::resource('student.notification', 'StudentNotificationController')->middleware('auth.token');
-Route::resource('student.meeting', 'StudentMeetingController')->middleware('auth.token');
+Route::resource('student', 'StudentController');
+Route::resource('student.participation', 'StudentParticipationController');
+Route::resource('student.notification', 'StudentNotificationController');
+Route::resource('student.meeting', 'StudentMeetingController');

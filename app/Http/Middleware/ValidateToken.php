@@ -2,8 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\User;
+use App\Docent;
+use App\Student;
 use App\Http\Controllers\UserController;
 use Closure;
+use Mockery\Exception;
 
 class ValidateToken
 {
@@ -20,23 +24,40 @@ class ValidateToken
         $user_id = substr($value, 51);
         $role = substr($value, 50, 1);
 
-        $users = \DB::table('users')->where('id', $user_id)->get();
+        $users = \DB::table('users')->where('token', $value)->get();
         $email = null;
-        if ($users->isEmpty()) {
-            return response('No authorization', 401);
-        }
         foreach ($users as $user) {
             $last_refresh = strtotime($user->updated_at);
             $current_time = time();
             $difference = $current_time - $last_refresh;
-            if ($user->token == $value) {
-                if ($difference < 3600) {
-                    \DB::table('users')->where('id', $user_id)->update(['updated_at' => date('Y-m-d G:i:s')]);
-                }
+            if ($difference < 3600) {
+                \DB::table('users')->where('token', $value)->update(['updated_at' => date('Y-m-d G:i:s')]);
+                $email = $user->email;
             } else {
                 return response('No authorization', 401);
             }
-            $email = $user->email;
+        }
+
+        if ($role == 's') {
+            try {
+                $student = Student::findOrFail($user_id);
+                if ($student->email != $email) {
+                    return response('No authorization', 401);
+                }
+            } catch (Exception $exception) {
+                return response('No authorization', 401);
+            }
+        } else if ($role === 'd') {
+            try {
+                $docent = Docent::findOrFail($user_id);
+                if ($docent->email != $email) {
+                    return response('No authorization', 401);
+                }
+            } catch (Exception $exception) {
+                return response('No authorization', 401);
+            }
+        } else {
+            return response('No authorization', 401);
         }
 
         if ($request->getRequestUri() == '/') {
@@ -46,6 +67,7 @@ class ValidateToken
                 if ($id != null) {
                     return redirect('/student/' . $id . '/meeting');
                 }
+
                 return response('No authorization', 401);
             } else {
                 $id = $userController->getDocentID($email);
