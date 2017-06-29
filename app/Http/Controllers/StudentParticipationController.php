@@ -12,6 +12,12 @@ use Illuminate\Http\Request;
 
 class StudentParticipationController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth.token');
+        $this->middleware('auth.routes.student', ['only' => ['store', 'destroy']]);
+    }
+
     public function show($id, Participation $participation)
     {
         return response()->json($participation);
@@ -19,8 +25,15 @@ class StudentParticipationController extends Controller
 
     public function index($id)
     {
-        $meetings = Participation::where('student_id', '=', $id)->get();
-        return response()->json($meetings);
+        $participations = Participation::where('student_id', '=', $id)->get();
+        foreach ($participations as $participation) {
+            $meeting = Meeting::findOrFail($participation->meeting_id);
+            $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
+            $docent = Docent::findOrFail($meetingSeries->docent_id);
+            $participation->meeting = $meeting;
+            $participation->docent = $docent;
+        }
+        return response()->json($participation);
     }
 
     public function store($id, Request $request)
@@ -33,13 +46,13 @@ class StudentParticipationController extends Controller
 
         //hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
         //TODO das hier ist ugnetestet!
-        if($meeting->slots == 1) {
+        if ($meeting->slots == 1) {
             $meeting->participants_count = $meeting->participants_count + 1;
-            if($meeting->participants_count <= $meeting->max_participants) {
+            if ($meeting->participants_count <= $meeting->max_participants) {
                 $participation->save();
                 $meeting->save();
             }
-        } else if($meeting->slots > 1) {
+        } else if ($meeting->slots > 1) {
             $participation->save();
         }
 
@@ -63,7 +76,7 @@ class StudentParticipationController extends Controller
     {
         $meeting = Meeting::findOrFail($participation->meeting_id);
         //TODO das hier ist noch ungetestet
-        if($meeting->slots == 1) {
+        if ($meeting->slots == 1) {
             $meeting->participants_count = $meeting->participants_count - 1;
             $meeting->save();
         }
@@ -100,14 +113,13 @@ class StudentParticipationController extends Controller
         $docentNotification->seen = 0;
         $docentNotification->save();
 
-        if($meeting->email_notification_docent == 1)
-        {
+        if ($meeting->email_notification_docent == 1) {
             $data = [
                 'meetingTitle' => $meeting->title,
                 'partStart' => $participation->start,
                 'partRemark' => $participation->remark
             ];
-            switch($typeOfNotification) {
+            switch ($typeOfNotification) {
                 case 'store':
                     \Mail::send('notify.meeting.newparticipation', $data, function ($m) use ($docent) {
                         $m->to($docent->email)->subject('Neue Anmeldung zu Ihrer Sprechstunde');
@@ -129,7 +141,7 @@ class StudentParticipationController extends Controller
 
     private function doBasicParticipationValidation(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'start' => 'required|date',
             'end' => 'required|date|after:start',
             'student_id' => 'required|max:10',

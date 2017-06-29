@@ -27,11 +27,19 @@
 
 Route::get('/', function () {
     return view('welcome');
-});
+})/*->middleware('auth.token')*/
+;
 
-Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents');
-Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries');
-Route::get('docent/search/{term}', 'DocentController@search');
+Route::post('/logout', "UserController@logout")->middleware('auth.token');
+Route::post('/login', "UserController@login");
+
+Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithStudents')/*->middleware('auth.token')*/
+;
+Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries')/*->middleware('auth.token')*/
+;
+Route::get('docent/search/{term}', 'DocentController@search')/*->middleware('auth.token')*/
+;
+
 Route::resource('docent', 'DocentController');
 Route::resource('docent.meeting', 'DocentMeetingController');
 Route::resource('docent.notification', 'DocentNotificationController');

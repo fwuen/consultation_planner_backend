@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class StudentNotificationController extends Controller
 {
+        public function __construct()
+    {
+        $this->middleware('auth.token');
+    }
     public function index($id)
     {
         $student_notifications = StudentNotification::where('student_id', '=', $id)->get();

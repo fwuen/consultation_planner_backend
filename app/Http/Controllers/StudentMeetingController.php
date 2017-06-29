@@ -9,6 +9,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 class StudentMeetingController extends Controller
 {
+        public function __construct()
+    {
+        $this->middleware('auth.token');
+    }
     public function show($id, Meeting $meeting)
     {
         $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
