@@ -9,6 +9,7 @@ use App\MeetingSeries;
 use App\Participation;
 use App\Slot;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class StudentParticipationController extends Controller
 {
@@ -36,14 +37,16 @@ class StudentParticipationController extends Controller
         }
         */
         $participations = Participation::where('student_id', '=', $id)->get();
-        foreach (participations as $participation) {
+        $participationResults = new Collection();
+        foreach ($participations as $participation) {
             $meeting = Meeting::findOrFail($participation->meeting_id);
             $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
-            $docent = Docent::findOrFail('id', '=', $meetingSeries->docent_id);
+            $docent = Docent::findOrFail($meetingSeries->docent_id);
             $meeting->participation = $participation;
             $meeting->docent = $docent;
+            $participationResults->push($meeting);
         }
-        return response()->json($participations);
+        return response()->json($participationResults);
     }
 
     public function store($id, Request $request)
@@ -79,7 +82,6 @@ class StudentParticipationController extends Controller
         }
 
         $this->notifyRelevantDocent($participation, 'store');
-        return redirect('student/' . $id . '/participation');
     }
 
     public function destroy($id, Participation $participation)
@@ -97,7 +99,6 @@ class StudentParticipationController extends Controller
         }
         $this->notifyRelevantDocent($participation, 'delete');
         $participation->delete();
-        return redirect('student/' . $id . '/participation');
     }
 
     private function notifyRelevantDocent(Participation $participation, $typeOfNotification)
