@@ -86,7 +86,7 @@ class UserController extends Controller
             }
         }
         $headers = ['Authorization' => $token];
-        return response('', '', $token);
+        return response('', '', $headers);
     }
 
     /**
