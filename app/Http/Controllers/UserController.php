@@ -79,18 +79,13 @@ class UserController extends Controller
             if ($id == null) {
                 return response('No authorization', 401);
             }
-            $url = '/student/' . $id . '/meeting';
         } else {
             $id = $this->getDocentID($email);
             if ($id == null) {
                 return response('No authorization', 401);
             }
-            $url = '/docent/' . $id . '/meeting';
         }
-        if ($url != null) {
-            return redirect($url)->header('Authorization', $token);
-        }
-        return response('No authorization', 401);
+        return redirect()->header('Authorization', $token);
     }
 
     /**
