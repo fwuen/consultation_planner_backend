@@ -25,6 +25,7 @@ class StudentParticipationController extends Controller
 
     public function index($id)
     {
+        /*
         $participations = Participation::where('student_id', '=', $id)->get();
         foreach ($participations as $participation) {
             $meeting = Meeting::findOrFail($participation->meeting_id);
@@ -33,7 +34,16 @@ class StudentParticipationController extends Controller
             $participation->meeting = $meeting;
             $participation->docent = $docent;
         }
-        return response()->json($participation);
+        */
+        $participations = Participation::where('student_id', '=', $id)->get();
+        foreach (participations as $participation) {
+            $meeting = Meeting::findOrFail($participation->meeting_id);
+            $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
+            $docent = Docent::findOrFail('id', '=', $meetingSeries->docent_id);
+            $meeting->participation = $participation;
+            $meeting->docent = $docent;
+        }
+        return response()->json($participations);
     }
 
     public function store($id, Request $request)
