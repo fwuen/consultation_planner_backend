@@ -141,24 +141,24 @@ class UserController extends Controller
      */
     public function sendRequest($username, $password)
     {
-        $url = 'http://localhost:69/authenticate';
-        $data = array('username' => $username, 'password' => $password);
-
-        // use key 'http' even if you send the request to https://...
-        $options = array(
-            'http' => array(
-                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                'method' => 'POST',
-                'content' => http_build_query($data)
-            )
-        );
         try {
+            $url = 'http://localhost:69/authenticate';
+            $data = array('username' => $username, 'password' => $password);
+
+            $options = array(
+                'http' => array(
+                    'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                    'method' => 'POST',
+                    'content' => http_build_query($data)
+                )
+            );
             $context = stream_context_create($options);
-            $result = file_get_contents($url, false, $context);
-            if ($result == 'Password wrong') {
-                return null;
-            }
+            $result = @file_get_contents($url, false, $context);
+
         } catch (Exception $exception) {
+            return null;
+        }
+        if ($result == 'Password wrong' || $result == false) {
             return null;
         }
 
@@ -209,88 +209,5 @@ class UserController extends Controller
     function generateRandomString($length = 50)
     {
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
-     */
-    public
-    function destroy(User $user)
-    {
-        //
     }
 }
