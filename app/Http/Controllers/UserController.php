@@ -85,7 +85,8 @@ class UserController extends Controller
                 return response('No authorization', 401);
             }
         }
-        return response()->header('Authorization', $token);
+        $headers = ['Authorization' => $token];
+        return response('', '', $token);
     }
 
     /**
