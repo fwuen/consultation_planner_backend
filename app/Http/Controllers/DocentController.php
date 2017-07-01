@@ -39,21 +39,6 @@ class DocentController extends Controller
         return redirect('docent / ' . $docent->id);
     }
 
-    public function search($term)
-    {
-        $termArray = explode(" ", $term);
-
-        $docents = \DB::table('docents')
-            ->where(function ($query) use ($termArray) {
-                foreach ($termArray as $value) {
-                    $query->orWhere('lastname', 'like', ' % ' . $value . ' % ');
-                    $query->orWhere('firstname', 'like', ' % ' . $value . ' % ');
-                }
-            })->get();
-
-        return response()->json($docents);
-    }
-
     private function doBasicDocentValidation(Request $request)
     {
         $this->validate($request, [

@@ -29,30 +29,6 @@ class DocentMeetingController extends Controller
         return response()->json($meeting);
     }
 
-    public function index($id)
-    {
-        $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
-        $timeForComparison->format('Y-m-d H:i:s');
-        $timeForComparison->modify('-14 day');
-        $meetingSeries = MeetingSeries::where('docent_id', '=', $id)->get();
-        $meetings = new Collection();
-
-        foreach ($meetingSeries as $series) {
-            $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)
-                ->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))
-                ->get();
-            foreach ($meetingsInSeries as $meeting) {
-                if ($meeting->has_passed != 1) {
-                    $meeting->checkDates();
-                }
-
-            }
-            $meetings->add($meetingsInSeries);
-        }
-
-        return response()->json($meetings);
-    }
-
     public function indexWithStudents($id)
     {
         $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
@@ -294,8 +270,8 @@ class DocentMeetingController extends Controller
 
     private function saveSlotsForMeeting(Meeting $meeting, Request $request)
     {
-        $start_time = new  \DateTime($request->start);
-        $end_time = new \DateTime($request->end);
+        $start_time = clone $meeting->start;
+        $end_time = clone $meeting->end;
         $start_time->format('Y-m-d H:i:s');
         $end_time->format('Y-m-d H:i:s');
         $start_time->setTimezone(new \DateTimeZone('Europe/Berlin'));
