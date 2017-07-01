@@ -96,6 +96,7 @@ class StudentParticipationController extends Controller
         foreach ($slots as $slot) {
             $slot->participation_id = null;
             $slot->occupied = 0;
+            $slot->save();
         }
         $this->notifyRelevantDocent($participation, 'delete');
         $participation->delete();
