@@ -6,25 +6,16 @@ use App\Docent;
 use App\Student;
 use App\User;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Mockery\Exception;
 
 class UserController extends Controller
 {
-    /**
-     * @param Request $request
-     */
     public function logout(Request $request)
     {
         $token = $request->header('Authorization');
         \DB::table('users')->where('token', $token)->update(['token' => "logged out"]);
     }
 
-    /**
-     *
-     * @param Request $request
-     * @return null | Redirector
-     */
     public function login(Request $request)
     {
         $username = $request->get('username');
@@ -79,24 +70,16 @@ class UserController extends Controller
             if ($id == null) {
                 return response('No authorization', 401);
             }
-            $url = '/student/' . $id . '/meeting';
         } else {
             $id = $this->getDocentID($email);
             if ($id == null) {
                 return response('No authorization', 401);
             }
-            $url = '/docent/' . $id . '/meeting';
         }
-        if ($url != null) {
-            return redirect($url)->header('Authorization', $token);
-        }
-        return response('No authorization', 401);
+        $headers = ['Authorization' => $token];
+        return response('', '200', $headers);
     }
 
-    /**
-     * @param $email
-     * @param $token
-     */
     public function createUser($email, $token)
     {
         $user = new User();
@@ -105,11 +88,6 @@ class UserController extends Controller
         $user->save();
     }
 
-    /**
-     * @param $first_name
-     * @param $last_name
-     * @param $email
-     */
     public function createStudent($first_name, $last_name, $email)
     {
         $student = new Student();
@@ -119,11 +97,6 @@ class UserController extends Controller
         $student->save();
     }
 
-    /**
-     * @param $first_name
-     * @param $last_name
-     * @param $email
-     */
     public function createDocent($first_name, $last_name, $email)
     {
         $docent = new Docent();
@@ -133,12 +106,6 @@ class UserController extends Controller
         $docent->save();
     }
 
-
-    /**
-     * @param $username
-     * @param $password
-     * @return bool|null|string
-     */
     public function sendRequest($username, $password)
     {
         try {
@@ -165,10 +132,6 @@ class UserController extends Controller
         return $result;
     }
 
-    /**
-     * @param String $email
-     * @return null
-     */
     public function getStudentID($email)
     {
         try {
@@ -183,10 +146,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @param $email
-     * @return null
-     */
     public function getDocentID($email)
     {
         try {
@@ -201,11 +160,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     *
-     * @param int $length
-     * @return bool|string
-     */
     function generateRandomString($length = 50)
     {
         return substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
