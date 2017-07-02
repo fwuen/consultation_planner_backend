@@ -36,10 +36,16 @@ class StudentParticipationController extends Controller
             $participation->docent = $docent;
         }
         */
-        $participations = Participation::where('student_id', '=', $id)->get();
+        $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
+        $timeForComparison->modify('-14 day');
+        $participations = Participation::where('student_id', '=', $id)->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))->get();
         $participationResults = new Collection();
         foreach ($participations as $participation) {
             $meeting = Meeting::findOrFail($participation->meeting_id);
+            if($meeting->has_passed != 1)
+            {
+                $meeting->checkDates();
+            }
             $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
             $docent = Docent::findOrFail($meetingSeries->docent_id);
             $meeting->participation = $participation;
