@@ -37,8 +37,6 @@ Route::get('docent/{id}/meeting/coalition', 'DocentMeetingController@indexWithSt
 ;
 Route::put('docent/{id}/meeting/{idOfFirstMeeting}/cancelseries', 'DocentMeetingController@cancelSeries')/*->middleware('auth.token')*/
 ;
-Route::get('docent/search/{term}', 'DocentController@search')/*->middleware('auth.token')*/
-;
 
 Route::resource('docent', 'DocentController');
 Route::resource('docent.meeting', 'DocentMeetingController');
@@ -47,4 +45,3 @@ Route::resource('docent.notification', 'DocentNotificationController');
 Route::resource('student', 'StudentController');
 Route::resource('student.participation', 'StudentParticipationController');
 Route::resource('student.notification', 'StudentNotificationController');
-Route::resource('student.meeting', 'StudentMeetingController');
