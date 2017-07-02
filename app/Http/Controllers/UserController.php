@@ -13,7 +13,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         $token = $request->header('Authorization');
-        \DB::table('users')->where('token', $token)->update(['token' => "logged out"]);
+        \DB::table('users')->where('token', $token)->update(['token' => '']);
     }
 
     public function login(Request $request)
