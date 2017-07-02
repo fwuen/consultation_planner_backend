@@ -16,7 +16,7 @@ class StudentParticipationController extends Controller
     public function __construct()
     {
         $this->middleware('auth.token');
-        $this->middleware('auth.routes.student', ['only' => ['store', 'destroy']]);
+        $this->middleware('auth.route.student', ['only' => ['store', 'destroy']]);
     }
 
     public function show($id, Participation $participation)
