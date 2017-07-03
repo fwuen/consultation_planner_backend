@@ -108,8 +108,9 @@ class DocentMeetingController extends Controller
                 return;
             }
             $meeting->save();
-
-            $this->saveSlotsForMeeting($meeting, $request);
+            if($meeting->slots != 1) {
+                $this->saveSlotsForMeeting($meeting, $request);
+            }
         }
     }
 
@@ -163,7 +164,9 @@ class DocentMeetingController extends Controller
             }
             $meeting->save();
 
-            $this->saveSlotsForMeeting($meeting, $request);
+            if($meeting->slots != 1) {
+                $this->saveSlotsForMeeting($meeting, $request);
+            }
 
             $dateTimeForMeetingStart->modify('+' . $interval . 'day');
             $dateTimeForMeetingEnd->modify('+' . $interval . 'day');

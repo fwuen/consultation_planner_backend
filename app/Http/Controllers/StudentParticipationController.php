@@ -73,27 +73,14 @@ class StudentParticipationController extends Controller
             }
         } else if ($meeting->slots > 1) {
             $participation->save();
-        }
-
-        /*
-        $slots = Slot::whereIn('id', $request->slot_list)->get();
-        foreach ($slots as $slot) {
-            if ($slot->occupied == 1) {
+            $slot = Slot::findOrFail($request->slot_id);
+            if($slot->occupied == 1) {
                 return;
             }
-        }
-        foreach ($slots as $slot) {
             $slot->participation_id = $participation->id;
             $slot->occupied = 1;
             $slot->save();
-        }*/
-        $slot = Slot::findOrFail($request->slot_id);
-        if($slot->occupied == 1) {
-            return;
         }
-        $slot->participation_id = $participation->id;
-        $slot->occupied = 1;
-        $slot->save();
 
         $this->notifyRelevantDocent($participation, 'store');
     }
