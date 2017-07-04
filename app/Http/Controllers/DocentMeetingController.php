@@ -38,21 +38,17 @@ class DocentMeetingController extends Controller
         $students = new Collection();
         $meetingStudentCoalitions = new \Illuminate\Support\Collection();
 
-        // alle Meetings einer Serie sammeln
         foreach ($meetingSeries as $series) {
             $meetingsInSeries = Meeting::where('meeting_series_id', '=', $series->id)
                 ->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))
                 ->get();
 
-            // jedes gefundene Meeting behandeln
             foreach ($meetingsInSeries as $meeting) {
                 if ($meeting->has_passed != 1) {
                     $meeting->checkDates();
                 }
-                // alle Participations für das gefundene Meeting holen
                 $participations = Participation::where('meeting_id', '=', $meeting->id)->get();
 
-                // anhand der gefundenen Participations die teilnehmenden Studenten ermitteln
                 foreach ($participations as $participation) {
                     $student = Student::findOrFail($participation->student_id);
                     $student->participation = $participation;
@@ -62,7 +58,6 @@ class DocentMeetingController extends Controller
 
                     $students->add($student);
                 }
-                // alle nicht belegten Slots behandeln
                 $slotsForMeeting = Slot::where('meeting_id', '=', $meeting->id)->where('occupied', '=', 0)->get();
                 $meeting->unoccupiedSlots = $slotsForMeeting;
 
@@ -285,10 +280,8 @@ class DocentMeetingController extends Controller
 
         $slot_interval = floor($mins / $request->slots);
 
-        // Zeit, mit der überprüft wird, ob beim aktuellen Meeting bis zum Ende aufgefüllt werden muss
         $check_time = clone $start_time;
 
-        // Zeit, die genutzt wird, um die Endzeit des Meetings festzulegen, wenn nicht aufgefüllt werden muss
         $add_time = clone $start_time;
         for ($i = 0; $i < $request->slots; $i++) {
             $slot = new Slot;
@@ -303,7 +296,6 @@ class DocentMeetingController extends Controller
             }
             $slot->save();
             $start_time->add(new DateInterval("PT" . $slot_interval . "M"));
-            // check_time auf den nächsten Wert von start_time setzen, dass von ihm aus überprüft werden kann
             $check_time = clone $start_time;
         }
     }

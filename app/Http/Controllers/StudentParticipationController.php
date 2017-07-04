@@ -26,16 +26,6 @@ class StudentParticipationController extends Controller
 
     public function index($id)
     {
-        /*
-        $participations = Participation::where('student_id', '=', $id)->get();
-        foreach ($participations as $participation) {
-            $meeting = Meeting::findOrFail($participation->meeting_id);
-            $meetingSeries = MeetingSeries::findOrFail($meeting->meeting_series_id);
-            $docent = Docent::findOrFail($meetingSeries->docent_id);
-            $participation->meeting = $meeting;
-            $participation->docent = $docent;
-        }
-        */
         $timeForComparison = new \DateTime('now', new \DateTimeZone("Europe/Berlin"));
         $timeForComparison->modify('-14 day');
         $participations = Participation::where('student_id', '=', $id)->where('end', '>=', $timeForComparison->format('Y-m-d H:i:s'))->get();
@@ -63,8 +53,6 @@ class StudentParticipationController extends Controller
         $this->setParticipationProperties($participation, $request, $id);
         $meeting = Meeting::findOrFail($participation->meeting_id);
 
-        //hier wird sich darauf verlassen, dass vom Frontend nur zulässige/nicht belegte Dates kommen
-        //TODO das hier ist ugnetestet!
         if ($meeting->slots == 1) {
             $meeting->participants_count = $meeting->participants_count + 1;
             if ($meeting->participants_count <= $meeting->max_participants) {
