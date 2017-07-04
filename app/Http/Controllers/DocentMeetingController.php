@@ -97,7 +97,6 @@ class DocentMeetingController extends Controller
             $meeting->participants_count = 0;
             $meeting->has_passed = 0;
 
-            //TODO das hier ist ungetestet!!!!!!!
             if ($meeting->slots != 1 && $meeting->max_participants != 1) {
                 $meetingSeries->delete();
                 return;
@@ -152,7 +151,6 @@ class DocentMeetingController extends Controller
             $meeting->participants_count = 0;
             $meeting->has_passed = 0;
 
-            //TODO das hier ist ungetestet!
             if ($meeting->slots != 1 && $meeting->max_participants != 1) {
                 $meetingSeries->delete();
                 return;
@@ -209,7 +207,6 @@ class DocentMeetingController extends Controller
             if ($participation->email_notification_student == 1) {
                 $students->push(Student::findOrFail($participation->student_id));
             }
-            //TODO Verweise auf notification message mit den richtigen IDs versehen
             $studentNotification = new StudentNotification();
             $studentNotification->message_id = 4;
             $studentNotification->participation_id = $participation->id;

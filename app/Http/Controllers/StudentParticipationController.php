@@ -80,7 +80,6 @@ class StudentParticipationController extends Controller
     public function destroy($id, Participation $participation)
     {
         $meeting = Meeting::findOrFail($participation->meeting_id);
-        //TODO das hier ist noch ungetestet
         if ($meeting->slots == 1) {
             $meeting->participants_count = $meeting->participants_count - 1;
             $meeting->save();
