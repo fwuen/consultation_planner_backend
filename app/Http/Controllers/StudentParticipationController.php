@@ -54,6 +54,10 @@ class StudentParticipationController extends Controller
         $meeting = Meeting::findOrFail($participation->meeting_id);
 
         if ($meeting->slots == 1) {
+            $participations = Participation::where('student_id', '=', $id)->where('meeting_id', '=', $meeting->id)->get();
+            if($participations.count() > 0) {
+                return;
+            }
             $meeting->participants_count = $meeting->participants_count + 1;
             if ($meeting->participants_count <= $meeting->max_participants) {
                 $participation->save();
