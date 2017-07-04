@@ -109,7 +109,7 @@ class UserController extends Controller
     public function sendRequest($username, $password)
     {
         try {
-            $url = 'http://localhost:69/authenticate';
+            $url = 'http://localhost:6969/authenticate';
             $data = array('username' => $username, 'password' => $password);
 
             $options = array(
